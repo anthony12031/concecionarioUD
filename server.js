@@ -1,15 +1,23 @@
 var express = require("express");
 var app = express();
 var bodyParser = require("body-parser");
+var dao = require('./dao');
 
 
 app.use(bodyParser.json());
 app.use('/',express.static('front-end'));
 
+var gestionCotizacion = require('./gestion-cotizacion');
+app.use(gestionCotizacion);
+var gestionVenta = require('./gestion-venta');
+app.use(gestionVenta);
 
 app.get('/', function (req, res) {
   res.send('server running');
 });
+
+
+
 
 var port = process.env.PORT || 8282;
 
