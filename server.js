@@ -1,9 +1,7 @@
 var express = require("express");
 var app = express();
 
-
 app.use('/',express.static('front-end'));
-
 
 
 app.get('/', function (req, res) {
