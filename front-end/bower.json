@@ -1,0 +1,22 @@
+{
+  "name": "front-end",
+  "homepage": "https://github.com/anthony12031/concecionarioUD",
+  "authors": [
+    "Anthony Vargas <tony_jason@hotmail.com>"
+  ],
+  "description": "",
+  "main": "",
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular-route": "^1.6.7",
+    "angular": "^1.6.7",
+    "moment": "^2.19.3"
+  }
+}
