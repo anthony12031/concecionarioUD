@@ -74,7 +74,7 @@ app.controller('controladorCotizacion',['$scope','Dao',function($scope,Dao){
 	
 	function getClientes(){
 		Dao.getClientes(function(err,result){
-			$scope.clientes = result;
+			$scope.clientes = result;;
 		});
 	}
 
