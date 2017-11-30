@@ -6,7 +6,7 @@ var dao = require('./dao');
 
 app.use(bodyParser.json());
 app.use(express.static('front-end'));
-app.use(express.static('front-end/startbootstrap-sb-admin-2/'));
+app.use(express.static('front-end/template/'));
 
 
 var gestionCotizacion = require('./gestion-cotizacion');
