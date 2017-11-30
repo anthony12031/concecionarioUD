@@ -5,18 +5,19 @@ var dao = require('./dao');
 
 
 app.use(bodyParser.json());
-app.use('/',express.static('front-end'));
+app.use(express.static('front-end'));
+app.use(express.static('front-end/startbootstrap-sb-admin-2/'));
+
 
 var gestionCotizacion = require('./gestion-cotizacion');
 app.use(gestionCotizacion);
 var gestionVenta = require('./gestion-venta');
 app.use(gestionVenta);
 
-app.get('/', function (req, res) {
-  res.send('server running');
+
+app.get('*', function (req, res) {
+  res.sendFile(__dirname+'/front-end/index.html');
 });
-
-
 
 
 var port = process.env.PORT || 8282;
