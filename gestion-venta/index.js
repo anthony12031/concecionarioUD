@@ -9,10 +9,9 @@ router.get('/cotizacion',function(req,res){
 
 router.get('/cotizacion/:idcotizacion',function(req,res){
 	var cotizacion = req.params.idcotizacion;
-	var formato = 'dd/mm/yyyy';
-	sql = 'SELECT C.idcotizacion idCotizacion, E.nombre empleado, CL.cedula cedula, TO_CHAR(C.fecha,''+formato+'') fecha '+
-	 'FROM cotizacion C, cliente CL, empleado E WHERE C.idempleado = E.idempleado AND '+
-	 'CL.cedula = C.cedula   AND C.idcotizacion = '+cotizacion;
+	sql = "SELECT C.idcotizacion idCotizacion, E.nombre empleado, CL.cedula cedula, TO_CHAR(C.fecha,'dd/mm/yyyy') fecha "+
+	 "FROM cotizacion C, cliente CL, empleado E WHERE C.idempleado = E.idempleado AND "+
+	 "CL.cedula = C.cedula   AND C.idcotizacion ="+cotizacion;
 	dao.open(sql,[],false,res);
 })
 
