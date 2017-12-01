@@ -29,6 +29,17 @@ router.get('/autos/:idAuto',function(req,res){
 	dao.open(sql,[],false,res);
 })
 
+router.get('/autos/partesIncluidas/:idAuto',function(req,res){
+	var idAuto = req.params.idAuto;
+	sql = "SELECT DISTINCT P.nombre parte, PH.precio,PA.cantidad, PA.cantidad*PH.precio subtotal FROM (SELECT P.nombre parte, MAX(PH.fecha) fecha "+
+"from historicoPrecioParte PH,parte P,auto A,parteAuto PA WHERE PA.idAuto = A.idAuto AND PA.idParte = "+
+"P.idParte AND PH.idParte = P.idParte AND A.idAuto=1 GROUP BY A.nombre, P.nombre) reciente, parte P,"+
+"historicoprecioparte PH,auto A,parteauto PA WHERE A.idAuto=PA.idAuto AND P.idParte = PA.idParte AND P.idparte = PH.idparte AND reciente.fecha = PH.fecha AND reciente.parte = p.nombre";
+	dao.open(sql,[],false,res);
+})
+
+
+
 //ejemplo insertar cliente
 router.post('/empleados',function(req,res){
 	console.log("post req");

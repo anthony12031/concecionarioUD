@@ -123,12 +123,24 @@ app.factory("Dao",['$http',function($http){
 			})
 	}
 
+	function getPartesIncluidas(idAuto,callback){
+		hacerPeticion('GET','/autos/partesIncluidas/'+idAuto,null)
+		.then(function(res){
+				callback (null,res.data);
+			})
+			//ocurrio algun error
+			.catch(function(err){
+				callback(err,null);
+			})
+	}
+
 	return{
 		getClientes:getClientes,
 		insertarCliente:insertarCliente,
 		getDetalleCliente:getDetalleCliente,
 		getAutos:getAutos,
-		getDetalleAuto:getDetalleAuto
+		getDetalleAuto:getDetalleAuto,
+		getPartesIncluidas:getPartesIncluidas
 	}
 }])
 
@@ -187,6 +199,10 @@ app.controller('controladorCotizacion',['$scope','Dao',function($scope,Dao){
 			console.log(result);
 			$('#seleccion-auto').hide();
 			$('#detalle-auto').show();
+		})
+		Dao.getPartesIncluidas($scope.autoSeleccionado.IDAUTO,function(err,result){
+			console.log(result);
+			$scope.partesIncluidas = result;
 		})
 	}
 

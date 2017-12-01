@@ -8,8 +8,7 @@
     <table class="table table-hover">
     <th ng-repeat="(key, value) in detalleCliente[0]">{{key}}</th>
     <tr class="rowCliente" ng-repeat ="cliente in detalleCliente">
-      <td>{{cliente.TIPOCONTACTO}}</td>
-      <td>{{cliente.CONTACTO}}</td>
+      <td ng-repeat="detalle in cliente">{{detalle}}</td>
     </tr>
     </table>
   </div>
