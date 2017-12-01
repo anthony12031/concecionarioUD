@@ -5,16 +5,16 @@
     <br>
     <div class="row">
     <div class="col-xs-6">
-      <input class="form-control input-sm" type="" name="" placeholder="nombre" ng-model="nombre">
+      <input class="form-control input-sm" type="" name="" placeholder="nombre" ng-model="cedula">
     </div>
     </div>
   </div>
   <div class="panel-body">
     <table class="table table-hover">
     <th ng-repeat="(key, value) in clientes[0]">{{key}}</th>
-    <tr class="rowCliente" ng-repeat ="cliente in clientes |filter: nombre" ng-click="seleccionarCliente(cliente,$event.currentTarget)">
+    <tr class="rowCliente" ng-repeat ="cliente in clientes | filter: cedula" ng-click="seleccionarCliente(cliente,$event.currentTarget)">
       <td>{{cliente.NOMBRE}}</td>
-      <td>{{cliente.ID}}</td>
+      <td>{{cliente.CEDULA}}</td>
     </tr>
     </table>
   </div>

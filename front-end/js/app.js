@@ -33,6 +33,24 @@ app.directive('seleccionCliente',[function(){
 	}
 }])
 
+app.directive('detalleCliente',[function(){
+	return {
+		templateUrl:'pages/detalleCliente.html'
+	}
+}])
+
+app.directive('seleccionAuto',[function(){
+	return {
+		templateUrl:'pages/seleccionAuto.html'
+	}
+}])
+
+app.directive('detalleAuto',[function(){
+	return {
+		templateUrl:'pages/detalleAuto.html'
+	}
+}])
+
 app.factory("Dao",['$http',function($http){
 
 	//metodo GET,POST,PUT,DELETE
@@ -72,16 +90,72 @@ app.factory("Dao",['$http',function($http){
 			})
 	}
 
+	function getDetalleCliente(cedula,callback){
+		hacerPeticion('GET','/empleados/'+cedula,null)
+		.then(function(res){
+				callback (null,res.data);
+			})
+			//ocurrio algun error
+			.catch(function(err){
+				callback(err,null);
+			})
+	}
+
+	function getAutos(callback){
+		hacerPeticion('GET','/autos/',null)
+		.then(function(res){
+				callback (null,res.data);
+			})
+			//ocurrio algun error
+			.catch(function(err){
+				callback(err,null);
+			})
+	}
+
+	function getDetalleAuto(idAuto,callback){
+		hacerPeticion('GET','/autos/'+idAuto,null)
+		.then(function(res){
+				callback (null,res.data);
+			})
+			//ocurrio algun error
+			.catch(function(err){
+				callback(err,null);
+			})
+	}
+
+	function getPartesIncluidas(idAuto,callback){
+		hacerPeticion('GET','/autos/partesIncluidas/'+idAuto,null)
+		.then(function(res){
+				callback (null,res.data);
+			})
+			//ocurrio algun error
+			.catch(function(err){
+				callback(err,null);
+			})
+	}
+
 	return{
 		getClientes:getClientes,
-		insertarCliente:insertarCliente
+		insertarCliente:insertarCliente,
+		getDetalleCliente:getDetalleCliente,
+		getAutos:getAutos,
+		getDetalleAuto:getDetalleAuto,
+		getPartesIncluidas:getPartesIncluidas
 	}
 }])
 
 
 app.controller('controladorCotizacion',['$scope','Dao',function($scope,Dao){
 	
-	getClientes();
+	Dao.getClientes(function(err,result){
+			$scope.clientes = result;
+			console.log(result);
+		});
+
+	Dao.getAutos(function(err,result){
+		$scope.autos = result;
+		console.log(result);
+	})
 
 	$scope.ejemploInsertarCliente = function(){
 		Dao.insertarCliente(323,'sdf','sdf',function(err,result){
@@ -90,16 +164,46 @@ app.controller('controladorCotizacion',['$scope','Dao',function($scope,Dao){
 	})
 	}
 
-	function getClientes(){
-		Dao.getClientes(function(err,result){
-			$scope.clientes = result;;
-		});
+	$scope.volver = function(menu){
+		if(menu == 'seleccionCliente'){
+			$('#seleccion-cliente').show();
+			$('#detalle-cliente').hide();
+		}
+		if(menu == 'seleccionAuto'){
+			$('#seleccion-auto').show();
+			$('#detalle-auto').hide();
+		}
 	}
 
 	$scope.seleccionarCliente = function(cliente,element){
 		$scope.clienteSeleccionado = cliente;
 		$('.rowCliente').removeClass('success');
 		$(element).addClass('success');
+		
+		Dao.getDetalleCliente($scope.clienteSeleccionado.CEDULA,function(err,result){
+			$scope.detalleCliente = result;
+			console.log(result);
+			$('#seleccion-cliente').hide();
+			$('#detalle-cliente').show();
+		})
+	}
+
+	$scope.seleccionarAuto = function(auto,element){
+		$scope.autoSeleccionado = auto;
+		$('.rowAuto').removeClass('success');
+		$(element).addClass('success');
+		
+		Dao.getDetalleAuto($scope.autoSeleccionado.IDAUTO,function(err,result){
+			console.log(result);
+			$scope.detalleAuto = result;
+			console.log(result);
+			$('#seleccion-auto').hide();
+			$('#detalle-auto').show();
+		})
+		Dao.getPartesIncluidas($scope.autoSeleccionado.IDAUTO,function(err,result){
+			console.log(result);
+			$scope.partesIncluidas = result;
+		})
 	}
 
 }])
