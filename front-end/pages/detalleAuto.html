@@ -1,0 +1,19 @@
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title"> <strong>{{autoSeleccionado.NOMBRE}}</strong> </h3>
+    <br>
+    <button class="btn btn-info" ng-click="volver('seleccionAuto')">Volver</button>
+  </div>
+  <div class="panel-body">
+    <table class="table table-hover">
+    <th>Caracteristica</th>
+    <th>Detalle</th>
+    <tr  ng-repeat ="caracteristica in detalleAuto">
+      <td>{{caracteristica.CARACTERISTICA}}</td>
+      <td>{{caracteristica.DETALLE}}</td>
+    </tr>
+    </table>
+  </div>
+   <div class="panel-footer">
+ </div>
+</div>

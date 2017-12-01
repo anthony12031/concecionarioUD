@@ -39,6 +39,17 @@ app.directive('detalleCliente',[function(){
 	}
 }])
 
+app.directive('seleccionAuto',[function(){
+	return {
+		templateUrl:'pages/seleccionAuto.html'
+	}
+}])
+
+app.directive('detalleAuto',[function(){
+	return {
+		templateUrl:'pages/detalleAuto.html'
+	}
+}])
 
 app.factory("Dao",['$http',function($http){
 
@@ -90,17 +101,49 @@ app.factory("Dao",['$http',function($http){
 			})
 	}
 
+	function getAutos(callback){
+		hacerPeticion('GET','/autos/',null)
+		.then(function(res){
+				callback (null,res.data);
+			})
+			//ocurrio algun error
+			.catch(function(err){
+				callback(err,null);
+			})
+	}
+
+	function getDetalleAuto(idAuto,callback){
+		hacerPeticion('GET','/autos/'+idAuto,null)
+		.then(function(res){
+				callback (null,res.data);
+			})
+			//ocurrio algun error
+			.catch(function(err){
+				callback(err,null);
+			})
+	}
+
 	return{
 		getClientes:getClientes,
 		insertarCliente:insertarCliente,
-		getDetalleCliente:getDetalleCliente
+		getDetalleCliente:getDetalleCliente,
+		getAutos:getAutos,
+		getDetalleAuto:getDetalleAuto
 	}
 }])
 
 
 app.controller('controladorCotizacion',['$scope','Dao',function($scope,Dao){
 	
-	getClientes();
+	Dao.getClientes(function(err,result){
+			$scope.clientes = result;
+			console.log(result);
+		});
+
+	Dao.getAutos(function(err,result){
+		$scope.autos = result;
+		console.log(result);
+	})
 
 	$scope.ejemploInsertarCliente = function(){
 		Dao.insertarCliente(323,'sdf','sdf',function(err,result){
@@ -109,16 +152,15 @@ app.controller('controladorCotizacion',['$scope','Dao',function($scope,Dao){
 	})
 	}
 
-	function getClientes(){
-		Dao.getClientes(function(err,result){
-			$scope.clientes = result;
-			console.log(result);
-		});
-	}
-
-	$scope.volver = function(){
-		$('#seleccion-cliente').show();
-		$('#detalle-cliente').hide();
+	$scope.volver = function(menu){
+		if(menu == 'seleccionCliente'){
+			$('#seleccion-cliente').show();
+			$('#detalle-cliente').hide();
+		}
+		if(menu == 'seleccionAuto'){
+			$('#seleccion-auto').show();
+			$('#detalle-auto').hide();
+		}
 	}
 
 	$scope.seleccionarCliente = function(cliente,element){
@@ -131,6 +173,20 @@ app.controller('controladorCotizacion',['$scope','Dao',function($scope,Dao){
 			console.log(result);
 			$('#seleccion-cliente').hide();
 			$('#detalle-cliente').show();
+		})
+	}
+
+	$scope.seleccionarAuto = function(auto,element){
+		$scope.autoSeleccionado = auto;
+		$('.rowAuto').removeClass('success');
+		$(element).addClass('success');
+		
+		Dao.getDetalleAuto($scope.autoSeleccionado.IDAUTO,function(err,result){
+			console.log(result);
+			$scope.detalleAuto = result;
+			console.log(result);
+			$('#seleccion-auto').hide();
+			$('#detalle-auto').show();
 		})
 	}
 

@@ -15,6 +15,20 @@ router.get('/empleados/:cedula',function(req,res){
 	dao.open(sql,[],false,res);
 })
 
+
+router.get('/autos',function(req,res){
+	sql = "SELECT idAuto, nombre FROM auto";
+	dao.open(sql,[],false,res);
+})
+
+router.get('/autos/:idAuto',function(req,res){
+	var idAuto = req.params.idAuto;
+	sql = "SELECT A.nombre auto,TC.detalle caracteristica,C.detalle detalle FROM tipoCaracteristica TC,"+
+	"caracteristica C,auto A,autoCara AC WHERE TC.idTipoCrc = C.idTipoCrc AND AC.idAuto = A.idAuto AND "+
+	"AC.idCrt = C.idCrt AND A.idAuto = "+idAuto;
+	dao.open(sql,[],false,res);
+})
+
 //ejemplo insertar cliente
 router.post('/empleados',function(req,res){
 	console.log("post req");
