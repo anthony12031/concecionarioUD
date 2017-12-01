@@ -294,7 +294,21 @@ app.controller('controladorVentas',['$scope','Dao',function($scope,Dao){
 		})
 	}
 
-	$scope.volver = function(menu){
+	$scope.seleccionarCotizacion = function(auto,element){
+		$scope.cotizacionSeleccionada = auto;
+		$('.rowCotizacion').removeClass('success');
+		$(element).addClass('success');
+		
+		Dao.getDetalleCotizacion($scope.cotizacionSeleccionada.COTIZACION,function(err,result){
+			console.log(result);
+			$scope.detalleCotizacion = result;			
+			$('#seleccion-cotizacion').hide();
+			$('#detalle-cotizacion').show();
+		})		
+
+	}
+
+	$scope.volver2 = function(menu){
 		if(menu == 'seleccionCotizacion'){
 			$('#seleccion-cotizacion').show();
 			$('#detalle-cotizacion').hide();

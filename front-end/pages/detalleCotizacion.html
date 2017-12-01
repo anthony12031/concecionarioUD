@@ -1,14 +1,14 @@
 <div class="panel panel-default">
   <div class="panel-heading">
-    <h3 class="panel-title"> <strong>{{clienteSeleccionado.NOMBRE}}</strong> </h3>
+    <h3 class="panel-title"> <strong>{{cotizacionSeleccionada.CEDULA}}</strong> </h3>
     <br>
-    <button class="btn btn-info" ng-click="volver('seleccionCliente')"> Volver</button>
+    <button class="btn btn-info" ng-click="volver2('seleccionCotizacion')"> Volver</button>
   </div>
   <div class="panel-body">
     <table class="table table-hover">
-    <th ng-repeat="(key, value) in detalleCliente[0]">{{key}}</th>
-    <tr class="rowCliente" ng-repeat ="cliente in detalleCliente">
-      <td ng-repeat="detalle in cliente">{{detalle}}</td>
+    <th ng-repeat="(key, value) in detalleCotizacion[0]">{{key}}</th>
+    <tr class="rowCotizacion" ng-repeat ="cotizacion in detalleCotizacion">
+      <td ng-repeat="detalle in cotizacion">{{detalle}}</td>
     </tr>
     </table>
   </div>
