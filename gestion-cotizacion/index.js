@@ -9,7 +9,7 @@ router.get('/empleados',function(req,res){
 
 router.get('/empleados/:cedula',function(req,res){
 	var cedula = req.params.cedula;
-	sql = "SELECT  CON.contacto,TC.nombreTipoContacto tipoContacto "+
+	sql = "SELECT TC.nombreTipoContacto tipoContacto,CON.contacto "+
 	 "FROM contacto CON,cliente C,tipoContacto TC WHERE C.cedula = CON.cedula AND "+
 	 "TC.idTipoContacto = CON.idTipoContacto  AND C.cedula = "+cedula;
 	dao.open(sql,[],false,res);
