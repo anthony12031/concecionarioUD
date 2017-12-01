@@ -21,6 +21,15 @@ router.get('/autos',function(req,res){
 	dao.open(sql,[],false,res);
 })
 
+router.get('/autos/accesorios',function(req,res){
+	sql = "SELECT P.nombre accesorio,PH.precio FROM(SELECT P.nombre parte, MAX(PH.fecha) "+
+	"fecha from historicoPrecioParte PH,parte P,tipoParte TP WHERE  PH.idParte = P.idParte "+
+	"AND TP.idTipoParte=3 AND P.idTipoParte = TP.idTipoParte GROUP BY  P.nombre) reciente,"+
+	"historicoPrecioParte PH,parte P WHERE PH.fecha = reciente.fecha AND P.nombre = reciente.parte "+
+	"AND PH.idparte = P.idparte"
+	dao.open(sql,[],false,res);
+})
+
 router.get('/autos/:idAuto',function(req,res){
 	var idAuto = req.params.idAuto;
 	sql = "SELECT A.nombre auto,TC.detalle caracteristica,C.detalle detalle FROM tipoCaracteristica TC,"+
@@ -38,6 +47,15 @@ router.get('/autos/partesIncluidas/:idAuto',function(req,res){
 "historicoprecioparte PH,auto A,parteauto PA WHERE A.idAuto=PA.idAuto AND P.idParte = PA.idParte AND P.idparte = "+
 "PH.idparte AND reciente.fecha = PH.fecha AND reciente.parte = p.nombre";
 	dao.open(sql,[],false,res);
+})
+
+
+router.post('autos/accesorios',function(req,res){
+	var accesorio = req.body.accesorio;
+	console.log(accesorio);
+	sql = "INSERT INTO cotizacion (id,first_name,last_name) VALUES (:id,:first_name,:last_name)";
+	//true significa autocommit
+	//dao.open(sql,[id,first_name,last_name],true,res);
 })
 
 

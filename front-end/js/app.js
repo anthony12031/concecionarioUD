@@ -134,13 +134,36 @@ app.factory("Dao",['$http',function($http){
 			})
 	}
 
+	function getAccesorios(callback){
+		hacerPeticion('GET','/autos/accesorios/',null)
+		.then(function(res){
+				callback (null,res.data);
+			})
+			//ocurrio algun error
+			.catch(function(err){
+				callback(err,null);
+			})
+	}
+	function agregarAccesorio(accesorio,callback){
+		hacerPeticion('POST','/autos/accesorios/',accesorio)
+		.then(function(res){
+				callback (null,res.data);
+			})
+			//ocurrio algun error
+			.catch(function(err){
+				callback(err,null);
+			})
+	}
+
 	return{
 		getClientes:getClientes,
 		insertarCliente:insertarCliente,
 		getDetalleCliente:getDetalleCliente,
 		getAutos:getAutos,
 		getDetalleAuto:getDetalleAuto,
-		getPartesIncluidas:getPartesIncluidas
+		getPartesIncluidas:getPartesIncluidas,
+		getAccesorios:getAccesorios,
+		agregarAccesorio:agregarAccesorio
 	}
 }])
 
@@ -204,6 +227,16 @@ app.controller('controladorCotizacion',['$scope','Dao',function($scope,Dao){
 			console.log(result);
 			$scope.partesIncluidas = result;
 		})
+		Dao.getAccesorios(function(err,result){
+			console.log(result);
+			$scope.accesorios = result;
+		})
+	}
+
+	$scope.accesoriosAgregados = [];
+	$scope.agregarAccesorio = function(accesorio){
+		console.log(accesorio);
+		$scope.accesoriosAgregados.push(accesorio);
 	}
 
 }])
