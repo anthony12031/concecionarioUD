@@ -51,6 +51,33 @@ app.directive('detalleAuto',[function(){
 	}
 }])
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+app.directive('seleccionCotizacion',[function(){
+	return {
+		templateUrl:'pages/seleccionCotizacion.html'
+	}
+}])
+
+app.directive('detalleCotizacion',[function(){
+	return {
+		templateUrl:'pages/detalleCotizacion.html'
+	}
+}])
+
 app.factory("Dao",['$http',function($http){
 
 	//metodo GET,POST,PUT,DELETE
@@ -134,13 +161,51 @@ app.factory("Dao",['$http',function($http){
 			})
 	}
 
+
+
+
+
+
+
+
+
+	function getCotizaciones(callback){
+		hacerPeticion('GET','/cotizacion',null)
+			//peticion exitosa
+			//res.data contiene la respuesta
+			.then(function(res){
+				callback (null,res.data);
+			})
+			//ocurrio algun error
+			.catch(function(err){
+				callback(err,null);
+			})
+	}
+
+	function getDetalleCotizacion(idCotizacion,callback){
+		hacerPeticion('GET','/cotizacion/'+ idCotizacion,null)
+		.then(function(res){
+				callback (null,res.data);
+			})
+			//ocurrio algun error
+			.catch(function(err){
+				callback(err,null);
+			})
+	}
+
 	return{
 		getClientes:getClientes,
 		insertarCliente:insertarCliente,
 		getDetalleCliente:getDetalleCliente,
 		getAutos:getAutos,
 		getDetalleAuto:getDetalleAuto,
-		getPartesIncluidas:getPartesIncluidas
+		getPartesIncluidas:getPartesIncluidas,
+
+
+		getCotizaciones:getCotizaciones,
+		getDetalleCotizacion:getDetalleCotizacion
+
+
 	}
 }])
 
@@ -210,5 +275,30 @@ app.controller('controladorCotizacion',['$scope','Dao',function($scope,Dao){
 
 
 app.controller('controladorVentas',['$scope','Dao',function($scope,Dao){
+
+	Dao.getCotizaciones(function(err,result){
+			$scope.cotizaciones = result;
+			console.log(result);
+	});
+
+	$scope.seleccionCotizacion = function(cotizacion,element){
+		$scope.cotizacionSeleccionada = cotizacion;
+		$('.rowCotizacion').removeClass('success');
+		$(element).addClass('success');
 		
+		Dao.getDetalleCotizacion($scope.cotizacionSeleccionada.idCotizacion,function(err,result){
+			$scope.detalleCliente = result;
+			console.log(result);
+			$('#seleccion-cliente').hide();
+			$('#detalle-cliente').show();
+		})
+	}
+
+	$scope.volver = function(menu){
+		if(menu == 'seleccionCotizacion'){
+			$('#seleccion-cotizacion').show();
+			$('#detalle-cotizacion').hide();
+		}
+		
+	}	
 }])

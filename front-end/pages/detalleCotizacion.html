@@ -1,0 +1,17 @@
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title"> <strong>{{clienteSeleccionado.NOMBRE}}</strong> </h3>
+    <br>
+    <button class="btn btn-info" ng-click="volver('seleccionCliente')"> Volver</button>
+  </div>
+  <div class="panel-body">
+    <table class="table table-hover">
+    <th ng-repeat="(key, value) in detalleCliente[0]">{{key}}</th>
+    <tr class="rowCliente" ng-repeat ="cliente in detalleCliente">
+      <td ng-repeat="detalle in cliente">{{detalle}}</td>
+    </tr>
+    </table>
+  </div>
+   <div class="panel-footer">
+ </div>
+</div>
