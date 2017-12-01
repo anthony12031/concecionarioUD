@@ -25,7 +25,7 @@ function open(sql,binds,dml,rs){
 			if(dml)
 				rs.send(JSON.stringify(result.rowsAffected));
 			else{
-				//console.log(JSON.stringify(result.rows));
+				console.log(JSON.stringify(result.rows));
 				rs.send(JSON.stringify(result.rows))
 			}
 			close(con)    

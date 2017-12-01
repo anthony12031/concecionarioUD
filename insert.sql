@@ -45,7 +45,7 @@ INSERT INTO parteauto (idParteAuto,idAuto,idParte,cantidad) Values(5,2,4,2);
 INSERT INTO parteauto (idParteAuto,idAuto,idParte,cantidad) Values(6,3,3,2);
 INSERT INTO parteauto (idParteAuto,idAuto,idParte,cantidad) Values(7,3,4,2);
 INSERT INTO tipoContacto (idTipoContacto,nombreTipoContacto) VALUES (1,'telefono');
-INSERT INTO tipoContacto (idTipoContacto,nombreTipoContacto) VALUES (2,'telefono');
+INSERT INTO tipoContacto (idTipoContacto,nombreTipoContacto) VALUES (2,'email');
 INSERT INTO tipoContacto (idTipoContacto,nombreTipoContacto) VALUES (3,'Direccion');
 INSERT INTO cliente (cedula,nombre,apellido) VALUES (1023933552,'Anthony','Vargas');
 INSERT INTO cliente (cedula,nombre,apellido) VALUES (1023933441,'Luis','Ramirez');

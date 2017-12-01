@@ -33,6 +33,13 @@ app.directive('seleccionCliente',[function(){
 	}
 }])
 
+app.directive('detalleCliente',[function(){
+	return {
+		templateUrl:'pages/detalleCliente.html'
+	}
+}])
+
+
 app.factory("Dao",['$http',function($http){
 
 	//metodo GET,POST,PUT,DELETE
@@ -72,9 +79,21 @@ app.factory("Dao",['$http',function($http){
 			})
 	}
 
+	function getDetalleCliente(cedula,callback){
+		hacerPeticion('GET','/empleados/'+cedula,null)
+		.then(function(res){
+				callback (null,res.data);
+			})
+			//ocurrio algun error
+			.catch(function(err){
+				callback(err,null);
+			})
+	}
+
 	return{
 		getClientes:getClientes,
-		insertarCliente:insertarCliente
+		insertarCliente:insertarCliente,
+		getDetalleCliente:getDetalleCliente
 	}
 }])
 
@@ -92,14 +111,27 @@ app.controller('controladorCotizacion',['$scope','Dao',function($scope,Dao){
 
 	function getClientes(){
 		Dao.getClientes(function(err,result){
-			$scope.clientes = result;;
+			$scope.clientes = result;
+			console.log(result);
 		});
+	}
+
+	$scope.volver = function(){
+		$('#seleccion-cliente').show();
+		$('#detalle-cliente').hide();
 	}
 
 	$scope.seleccionarCliente = function(cliente,element){
 		$scope.clienteSeleccionado = cliente;
 		$('.rowCliente').removeClass('success');
 		$(element).addClass('success');
+		
+		Dao.getDetalleCliente($scope.clienteSeleccionado.CEDULA,function(err,result){
+			$scope.detalleCliente = result;
+			console.log(result);
+			$('#seleccion-cliente').hide();
+			$('#detalle-cliente').show();
+		})
 	}
 
 }])

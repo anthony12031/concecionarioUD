@@ -3,10 +3,17 @@ var router = express.Router();
 var dao = require('../dao');
 
 router.get('/empleados',function(req,res){
-	sql = "SELECT first_name||' '||last_name nombre,id FROM s_emp";
+	sql = "SELECT nombre ||' '||apellido nombre, cedula  FROM cliente";
 	dao.open(sql,[],false,res);
 })
 
+router.get('/empleados/:cedula',function(req,res){
+	var cedula = req.params.cedula;
+	sql = "SELECT  CON.contacto,TC.nombreTipoContacto tipoContacto "+
+	 "FROM contacto CON,cliente C,tipoContacto TC WHERE C.cedula = CON.cedula AND "+
+	 "TC.idTipoContacto = CON.idTipoContacto  AND C.cedula = "+cedula;
+	dao.open(sql,[],false,res);
+})
 
 //ejemplo insertar cliente
 router.post('/empleados',function(req,res){
