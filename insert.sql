@@ -37,6 +37,31 @@ INSERT INTO historicoPrecioParte (idHistPrecio,idParte,precio,fecha) VALUES (4,4
 INSERT INTO historicoPrecioParte (idHistPrecio,idParte,precio,fecha) VALUES (5,5,150000,sysdate);
 INSERT INTO historicoPrecioParte (idHistPrecio,idParte,precio,fecha) VALUES (6,6,170000,sysdate);
 INSERT INTO historicoPrecioParte (idHistPrecio,idParte,precio,fecha) VALUES (7,7,80000,sysdate);
+INSERT INTO parteauto (idParteAuto,idAuto,idParte,cantidad) Values(1,1,1,1);
+INSERT INTO parteauto (idParteAuto,idAuto,idParte,cantidad) Values(2,1,3,2);
+INSERT INTO parteauto (idParteAuto,idAuto,idParte,cantidad) Values(3,1,4,2);
+INSERT INTO parteauto (idParteAuto,idAuto,idParte,cantidad) Values(4,2,3,2);
+INSERT INTO parteauto (idParteAuto,idAuto,idParte,cantidad) Values(5,2,4,2);
+INSERT INTO parteauto (idParteAuto,idAuto,idParte,cantidad) Values(6,3,3,2);
+INSERT INTO parteauto (idParteAuto,idAuto,idParte,cantidad) Values(7,3,4,2);
+INSERT INTO tipoContacto (idTipoContacto,nombreTipoContacto) VALUES (1,'telefono');
+INSERT INTO tipoContacto (idTipoContacto,nombreTipoContacto) VALUES (2,'telefono');
+INSERT INTO tipoContacto (idTipoContacto,nombreTipoContacto) VALUES (3,'Direccion');
+INSERT INTO cliente (cedula,nombre,apellido) VALUES (1023933552,'Anthony','Vargas');
+INSERT INTO cliente (cedula,nombre,apellido) VALUES (1023933441,'Luis','Ramirez');
+INSERT INTO cliente (cedula,nombre,apellido) VALUES (1023933771,'Andres','Buitrago');
+INSERT INTO contacto (idContacto,idTipoContacto,cedula,contacto) VALUES    (1,1,1023933552,3102329814);
+INSERT INTO contacto (idContacto,idTipoContacto,cedula,contacto) VALUES    (2,2,1023933552,'ajvargass@correo.udistrital.edu.co');
+INSERT INTO contacto (idContacto,idTipoContacto,cedula,contacto) VALUES    (3,3,1023933552,'cra 79g #35-45');
+INSERT INTO contacto (idContacto,idTipoContacto,cedula,contacto) VALUES    (4,1,1023933441,'319673678');
+INSERT INTO contacto (idContacto,idTipoContacto,cedula,contacto) VALUES    (5,2,1023933441,'Luis@hotmail.com');
+INSERT INTO contacto (idContacto,idTipoContacto,cedula,contacto) VALUES    (6,3,1023933441,'cll 25 #15');
+INSERT INTO contacto (idContacto,idTipoContacto,cedula,contacto) VALUES    (7,1,1023933771,'316345234');
+INSERT INTO contacto (idContacto,idTipoContacto,cedula,contacto) VALUES    (8,2,1023933771,'Andres@gmail.com');
+INSERT INTO contacto (idContacto,idTipoContacto,cedula,contacto) VALUES    (9,3,1023933771,'transveral 22 #34');
+
+
+
 
 
 
