@@ -58,14 +58,6 @@ app.directive('detalleAuto',[function(){
 
 
 
-
-
-
-
-
-
-
-
 app.directive('seleccionCotizacion',[function(){
 	return {
 		templateUrl:'pages/seleccionCotizacion.html'
@@ -175,12 +167,6 @@ app.factory("Dao",['$http',function($http){
 
 
 
-
-
-
-
-
-
 	function getCotizaciones(callback){
 		hacerPeticion('GET','/cotizacion',null)
 			//peticion exitosa
@@ -194,6 +180,28 @@ app.factory("Dao",['$http',function($http){
 			})
 	}
 
+	function getAccesorios(callback){
+		hacerPeticion('GET','/autos/accesorios/',null)
+		.then(function(res){
+				callback (null,res.data);
+			})
+			//ocurrio algun error
+			.catch(function(err){
+				callback(err,null);
+			})
+	}
+	function agregarAccesorio(accesorio,callback){
+		hacerPeticion('POST','/autos/accesorios/',accesorio)
+		.then(function(res){
+				callback (null,res.data);
+			})
+			//ocurrio algun error
+			.catch(function(err){
+				callback(err,null);
+			})
+	}
+
+
 	function getDetalleCotizacion(idCotizacion,callback){
 		hacerPeticion('GET','/cotizacion/'+ idCotizacion,null)
 		.then(function(res){
@@ -205,8 +213,27 @@ app.factory("Dao",['$http',function($http){
 			})
 	}
 
-	function getDetallePago30(idCotizacion,callback){
-		hacerPeticion('GET','/pago30',null)
+	function getPrecioAuto(idAuto,callback){
+		hacerPeticion('GET','/autos/precio/'+idAuto,null)
+		.then(function(res){
+				callback (null,res.data);
+			})
+			//ocurrio algun error
+			.catch(function(err){
+				callback(err,null);
+			})
+	}	
+
+	function almacenarCotizacion(cedula,idEmpleado,detallesCotizacion,idAuto,idHistPrecioAuto,callback){
+		var datos = {
+			cedula:cedula,
+			idEmpleado:idEmpleado,
+			detallesCotizacion:detallesCotizacion,
+			idAuto:idAuto,
+			idHistPrecioAuto:idHistPrecioAuto
+		}
+		hacerPeticion('POST','/cotizaciones/',datos)
+
 		.then(function(res){
 				callback (null,res.data);
 			})
@@ -225,10 +252,15 @@ app.factory("Dao",['$http',function($http){
 		getPartesIncluidas:getPartesIncluidas,
 
 
+
 		getCotizaciones:getCotizaciones,
 		getDetalleCotizacion:getDetalleCotizacion,
 		getDetallePago30:getDetallePago30
 
+		getAccesorios:getAccesorios,
+		agregarAccesorio:agregarAccesorio,
+		almacenarCotizacion:almacenarCotizacion,
+		getPrecioAuto:getPrecioAuto
 
 	}
 }])
@@ -277,11 +309,18 @@ app.controller('controladorCotizacion',['$scope','Dao',function($scope,Dao){
 		})
 	}
 
+	$scope.total = 0;
 	$scope.seleccionarAuto = function(auto,element){
 		$scope.autoSeleccionado = auto;
 		$('.rowAuto').removeClass('success');
 		$(element).addClass('success');
 		
+		Dao.getPrecioAuto($scope.autoSeleccionado.IDAUTO,function(err,result){
+			console.log(result);
+			$scope.precioAuto = result[0];
+			$scope.total += $scope.precioAuto.PRECIO;
+		})
+
 		Dao.getDetalleAuto($scope.autoSeleccionado.IDAUTO,function(err,result){
 			console.log(result);
 			$scope.detalleAuto = result;
@@ -292,7 +331,41 @@ app.controller('controladorCotizacion',['$scope','Dao',function($scope,Dao){
 		Dao.getPartesIncluidas($scope.autoSeleccionado.IDAUTO,function(err,result){
 			console.log(result);
 			$scope.partesIncluidas = result;
+
 		})
+		Dao.getAccesorios(function(err,result){
+			console.log(result);
+			$scope.accesorios = result;
+		})
+	}
+
+
+
+	$scope.accesoriosAgregados = [];
+	$scope.agregarAccesorio = function(accesorio){
+		console.log(accesorio);
+		var nuevo_accesorio = {};
+		for (var key in accesorio){
+			nuevo_accesorio[key] = accesorio[key];
+		}
+		nuevo_accesorio.CANTIDAD = 1;
+		nuevo_accesorio.SUBTOTAL= nuevo_accesorio.CANTIDAD*nuevo_accesorio.PRECIO;
+		$scope.accesoriosAgregados.push(nuevo_accesorio);
+		$scope.total += parseFloat(nuevo_accesorio.SUBTOTAL);	
+	}
+
+	$scope.guardarCotizacion = function(){
+		var detallesCotizacion = $scope.partesIncluidas.concat($scope.accesoriosAgregados);
+		console.log(detallesCotizacion);
+		if(!$scope.clienteSeleccionado){
+			alert("selecione un cliente");
+		}
+		else{
+			Dao.almacenarCotizacion($scope.clienteSeleccionado.CEDULA,11111,detallesCotizacion,
+				$scope.autoSeleccionado.IDAUTO,$scope.precioAuto.IDHISTPRECIOAUTO,function(err,result){
+					console.log(result);
+			})
+		}
 	}
 
 }])

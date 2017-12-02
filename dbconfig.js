@@ -1,5 +1,5 @@
 module.exports = {
-  user          : "system",
-  password      : "juegosxbox",
+  user          : "concecionario",
+  password      : "concecionario",
   connectString : "localhost/XE"
 };

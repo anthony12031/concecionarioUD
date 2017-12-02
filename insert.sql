@@ -59,10 +59,10 @@ INSERT INTO contacto (idContacto,idTipoContacto,cedula,contacto) VALUES    (6,3,
 INSERT INTO contacto (idContacto,idTipoContacto,cedula,contacto) VALUES    (7,1,1023933771,'316345234');
 INSERT INTO contacto (idContacto,idTipoContacto,cedula,contacto) VALUES    (8,2,1023933771,'Andres@gmail.com');
 INSERT INTO contacto (idContacto,idTipoContacto,cedula,contacto) VALUES    (9,3,1023933771,'transveral 22 #34');
-
-
-
-
+INSERT INTO empleado (idempleado,nombre,apellido,fechaingreso,telefono,fechanacimiento,cargo) VALUES    (11111,'Fernando','Lopez','01/01/2017','234125','10/02/1970','asesor');
+INSERT INTO historicoPrecioAuto (idHistPrecioAuto,IdAuto,Precio,fecha) VALUES (1,1,50000000,sysdate);
+INSERT INTO historicoPrecioAuto (idHistPrecioAuto,IdAuto,Precio,fecha) VALUES (2,2,70000000,sysdate);
+INSERT INTO historicoPrecioAuto (idHistPrecioAuto,IdAuto,Precio,fecha) VALUES (3,3,90000000,sysdate);
 
 
 
