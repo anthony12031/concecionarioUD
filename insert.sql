@@ -63,6 +63,27 @@ INSERT INTO empleado (idempleado,nombre,apellido,fechaingreso,telefono,fechanaci
 INSERT INTO historicoPrecioAuto (idHistPrecioAuto,IdAuto,Precio,fecha) VALUES (1,1,50000000,sysdate);
 INSERT INTO historicoPrecioAuto (idHistPrecioAuto,IdAuto,Precio,fecha) VALUES (2,2,70000000,sysdate);
 INSERT INTO historicoPrecioAuto (idHistPrecioAuto,IdAuto,Precio,fecha) VALUES (3,3,90000000,sysdate);
+INSERT INTO tipotarjeta (idtipotarjeta,nombre) VALUES (10001,'DEBITO');
+INSERT INTO tipotarjeta (idtipotarjeta,nombre) VALUES (10002,'CREDITO');
+INSERT INTO tipotarjeta (idtipotarjeta,nombre) VALUES (10003,'REVOLVING');
+INSERT INTO tipotarjeta (idtipotarjeta,nombre) VALUES (10004,'PREPAGO');
+INSERT INTO tipotarjeta (idtipotarjeta,nombre) VALUES (10005,'MONEDERO');
+INSERT INTO tipotarjeta (idtipotarjeta,nombre) VALUES (10006,'COMERCIAL');
+INSERT INTO grupofinanciero (idgrfinan2,telefono,direccion,nombre) VALUES (10865,'2094711','Cra 9 #21-11','PacificColombia');
+INSERT INTO grupofinanciero (idgrfinan2,telefono,direccion,nombre) VALUES (10611,'5846931','Cra 2 #69-78','ValorizacionColombia');
+INSERT INTO grupofinanciero (idgrfinan2,telefono,direccion,nombre) VALUES (10421,'8955210','Av 80 #78 Sur','AhorroGroup');
+INSERT INTO grupofinanciero (idgrfinan2,telefono,direccion,nombre) VALUES (10978,'3314785','Cll 13B #65-35','AsoDineroCol');
+INSERT INTO grupofinanciero (idgrfinan2,telefono,direccion,nombre) VALUES (10302,'2011963','Av Sucre #96','InversionCol');
+INSERT INTO grupofinanciero (idgrfinan2,telefono,direccion,nombre) VALUES (10556,'4652288','Cll 61 #12-81A','EfectivoMoneyCol');
+INSERT INTO banco (idbanco2,nombre,correo,telefono,direccion) VALUES (4813,'TransAmerica','tramerica@banco.com','8941242','Cra 56 #85-14');
+INSERT INTO banco (idbanco2,nombre,correo,telefono,direccion) VALUES (4825,'ColBanco','colombianbank@banco.com','5974205','Cra 82 #23-11');
+INSERT INTO banco (idbanco2,nombre,correo,telefono,direccion) VALUES (4853,'DinnerGold','dnngold@banco.com','8603451','Av 1 #85-14 Este');
+INSERT INTO banco (idbanco2,nombre,correo,telefono,direccion) VALUES (4942,'TitanMoney','titanmmny@banco.com','2648017','Cll 35 Sur #56');
+INSERT INTO banco (idbanco2,nombre,correo,telefono,direccion) VALUES (4971,'Bolivariano','bolvcolombia@banco.com','9305782','Cra 10 #04-32');
+INSERT INTO banco (idbanco2,nombre,correo,telefono,direccion) VALUES (5001,'FinanzasG','financolombia@banco.com','1542389','Diag 89 #20 Norte');
+INSERT INTO tipotarjeta (idTipoTarjeta,nombre) VALUES (502,'EFECTIVO');
+INSERT INTO tipotarjeta (idTipoTarjeta,nombre) VALUES (505,'CHEQUE');
+INSERT INTO tipotarjeta (idTipoTarjeta,nombre) VALUES (507,'TARJETA');
 
 
 
