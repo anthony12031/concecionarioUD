@@ -545,11 +545,28 @@ app.controller('controladorVentas',['$scope','Dao',function($scope,Dao){
 		}
 	}
 
+	$scope.seleccionarBanco = function(banco,valor){
+		console.log("selecionar banco");
+		console.log(banco.CORREO);
+		console.log(valor);
+		console.log($scope.cotizacionSeleccionada.CEDULA);
+	}
+
 	$scope.volver2 = function(menu){
 		if(menu == 'seleccionCotizacion'){
 			$('#seleccion-cotizacion').show();
 			$('#detalle-cotizacion').hide();
 			$('#seleccion-pago').hide();	
+		}
+
+		if(menu == 'medio-pago-30'){
+			$('#medioPago-30').show();
+			$('#bancos-aliados-30').hide();
+		}
+
+		if(menu == 'medio-pago-70'){
+			$('#medioPago-70').show();
+			$('#bancos-aliados-70').hide();
 		}
 
 		if(menu == 'pago'){			

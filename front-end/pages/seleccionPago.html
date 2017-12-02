@@ -12,15 +12,17 @@
     <tr>
       <td> 
         <div class="panel-footer"> <button class="btn btn-info">30% : {{cotizacionSeleccionada.TOTAL*0.3 | currency:"COP $ "}}</button> </div>
-
+        <br>
+        <button class="btn btn-info" ng-click="volver2('medio-pago-30')"> Volver</button>
+        <br>
         <div class="list-group"  id="medioPago-30">
           <a href="#" class="list-group-item" ng-repeat="medioPago in mediosPago" ng-click="selecionarMedioPago(medioPago,cotizacionSeleccionada.TOTAL*0.3,30 )">{{medioPago.MEDIOPAGO}}</a>
         </div>
 
-        <div class="col-md-4" style="display: none"  id="bancos-aliados-30">
+        <div class="col-md-4" style="display: none" id="bancos-aliados-30">
         <table class="table table-hover">
           <th ng-repeat="(key,val) in bancosAliados[0]">{{key}}</th>
-          <tr  ng-repeat ="bancoAliado in bancosAliados">
+          <tr  ng-repeat ="bancoAliado in bancosAliados" ng-click="seleccionarBanco(bancoAliado,cotizacionSeleccionada.TOTAL*0.3)">
             <td ng-repeat ="detalle in bancoAliado">{{detalle}}</td>
           </tr>
           </table>
@@ -30,6 +32,10 @@
       <td>
        <div class="panel-footer"> <button class="btn btn-info" >70% : {{cotizacionSeleccionada.TOTAL*0.7 | currency:"COP $ "}}</button> </div> 
 
+       <br>
+        <button class="btn btn-info" ng-click="volver2('medio-pago-70')"> Volver</button>
+        <br>
+
         <div class="list-group"  id="medioPago-70">
           <a href="#" class="list-group-item" ng-repeat="medioPago in mediosPago" ng-click="selecionarMedioPago(medioPago,cotizacionSeleccionada.TOTAL*0.7,70)">{{medioPago.MEDIOPAGO}}</a>
         </div>
@@ -37,7 +43,7 @@
         <div class="col-md-4" style="display: none" id="bancos-aliados-70">
         <table class="table table-hover">
           <th ng-repeat="(key,val) in bancosAliados[0]">{{key}}</th>
-          <tr  ng-repeat ="bancoAliado in bancosAliados">
+          <tr  ng-repeat ="bancoAliado in bancosAliados" ng-click="seleccionarBanco(bancoAliado,cotizacionSeleccionada.TOTAL*0.7)">
             <td ng-repeat ="detalle in bancoAliado">{{detalle}}</td>
           </tr>
           </table>
