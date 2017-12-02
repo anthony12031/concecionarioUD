@@ -250,13 +250,8 @@ app.factory("Dao",['$http',function($http){
 		getAutos:getAutos,
 		getDetalleAuto:getDetalleAuto,
 		getPartesIncluidas:getPartesIncluidas,
-
-
-
 		getCotizaciones:getCotizaciones,
 		getDetalleCotizacion:getDetalleCotizacion,
-		getDetallePago30:getDetallePago30
-
 		getAccesorios:getAccesorios,
 		agregarAccesorio:agregarAccesorio,
 		almacenarCotizacion:almacenarCotizacion,
