@@ -452,7 +452,7 @@ app.controller('controladorCotizacion',['$scope','Dao',function($scope,Dao){
  	}
  	 };
  // download the PDF
- pdfMake.createPdf(docDefinition).download('optionalName.pdf');
+ pdfMake.createPdf(docDefinition).download('Cotizacion'+$scope.autoSeleccionado.NOMBRE+'.pdf');
 	}
 
 }])
