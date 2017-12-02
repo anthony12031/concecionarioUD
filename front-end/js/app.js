@@ -78,6 +78,18 @@ app.directive('detalleCotizacion',[function(){
 	}
 }])
 
+app.directive('seleccionPago',[function(){
+	return {
+		templateUrl:'pages/seleccionPago.html'
+	}
+}])
+
+app.directive('detallePago30',[function(){
+	return {
+		templateUrl:'pages/detallePago30.html'
+	}
+}])
+
 app.factory("Dao",['$http',function($http){
 
 	//metodo GET,POST,PUT,DELETE
@@ -193,6 +205,17 @@ app.factory("Dao",['$http',function($http){
 			})
 	}
 
+	function getDetallePago30(idCotizacion,callback){
+		hacerPeticion('GET','/pago30',null)
+		.then(function(res){
+				callback (null,res.data);
+			})
+			//ocurrio algun error
+			.catch(function(err){
+				callback(err,null);
+			})
+	}
+
 	return{
 		getClientes:getClientes,
 		insertarCliente:insertarCliente,
@@ -203,7 +226,8 @@ app.factory("Dao",['$http',function($http){
 
 
 		getCotizaciones:getCotizaciones,
-		getDetalleCotizacion:getDetalleCotizacion
+		getDetalleCotizacion:getDetalleCotizacion,
+		getDetallePago30:getDetallePago30
 
 
 	}
@@ -281,19 +305,6 @@ app.controller('controladorVentas',['$scope','Dao',function($scope,Dao){
 			console.log(result);
 	});
 
-	$scope.seleccionCotizacion = function(cotizacion,element){
-		$scope.cotizacionSeleccionada = cotizacion;
-		$('.rowCotizacion').removeClass('success');
-		$(element).addClass('success');
-		
-		Dao.getDetalleCotizacion($scope.cotizacionSeleccionada.idCotizacion,function(err,result){
-			$scope.detalleCliente = result;
-			console.log(result);
-			$('#seleccion-cliente').hide();
-			$('#detalle-cliente').show();
-		})
-	}
-
 	$scope.seleccionarCotizacion = function(auto,element){
 		$scope.cotizacionSeleccionada = auto;
 		$('.rowCotizacion').removeClass('success');
@@ -304,14 +315,22 @@ app.controller('controladorVentas',['$scope','Dao',function($scope,Dao){
 			$scope.detalleCotizacion = result;			
 			$('#seleccion-cotizacion').hide();
 			$('#detalle-cotizacion').show();
-		})		
-
+		})
 	}
 
 	$scope.volver2 = function(menu){
 		if(menu == 'seleccionCotizacion'){
 			$('#seleccion-cotizacion').show();
 			$('#detalle-cotizacion').hide();
+			$('#seleccion-pago').hide();	
+		}
+
+		if(menu == 'pago'){			
+			$('#seleccion-pago').show();			
+		}
+
+		if(menu == 'treinta'){			
+			$('#detalle-pago30').show();			
 		}
 		
 	}	
