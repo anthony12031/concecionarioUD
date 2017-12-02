@@ -11,6 +11,9 @@ app.config(function($routeProvider,$locationProvider) {
     .when("/login", {
         templateUrl : "pages/login.html"
     })
+    .when("/estudioCredito",{
+    	templateUrl:"pages/estudioCredito.html"
+    })
         // use the HTML5 History API
         $locationProvider.html5Mode(true);
 });
@@ -50,12 +53,6 @@ app.directive('detalleAuto',[function(){
 		templateUrl:'pages/detalleAuto.html'
 	}
 }])
-
-
-
-
-
-
 
 
 app.directive('seleccionCotizacion',[function(){
