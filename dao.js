@@ -18,7 +18,7 @@ function error(err,rs,cn){
 		return 0;
 }
 
-function open(sql,binds,dml,rs){
+function open(sql,binds,dml,rs,callback){
 	oracle.getConnection(auth,function(err,con){
 		if(error(err,rs,null)==-1) return;
 		con.execute(sql,binds,{autoCommit:dml},function(err,result){
@@ -28,12 +28,16 @@ function open(sql,binds,dml,rs){
 			if(dml){
 				if(rs)
 				rs.send(JSON.stringify(result.rowsAffected));
+				if(callback)
+					callback(result);
 			}
 				
 			else{
 				//console.log(JSON.stringify(result.rows));
 				if(rs)
 				rs.send(JSON.stringify(result.rows))
+				if(callback)
+					callback(result);
 			}
 			close(con)    
 		})

@@ -73,21 +73,33 @@ router.post('/cotizaciones',function(req,res){
 	console.log(idEmpleado)
 	console.log(detallesCotizacion)
 	console.log(idCotizacion)
+	var detallesCotizacion = req.body.detallesCotizacion;
 	//insertar registro de la cotizacion
 	sql = "INSERT INTO cotizacion (idCotizacion,idEmpleado,cedula,idAuto,idHistPrecioAuto,fecha) VALUES "+
 	"(:idCotizacion,:idEmpleado,:cedula,:idAuto,:idHistPrecioAuto,sysdate)";
-	dao.open(sql,[idCotizacion,idEmpleado,cedula,idAuto,idHistPrecioAuto],true,null);
+	dao.open(sql,[idCotizacion,idEmpleado,cedula,idAuto,idHistPrecioAuto],true,null,function(result){
+		console.log(detallesCotizacion)
+		//insertar detalles cotizacion
+		detallesCotizacion.forEach(function(detalle){
+			sql = "INSERT INTO detalleCotizacion (idCotizacion,numDetalleCotizacion,idParte,cantidad,subtotal,precio_unitario) "+
+		"VALUES (:idCotizacion,:numDetalleCotizacion,:idParte,:cantidad,:subtotal,:precio_unitario)";
+		var numDetalleCotizacion = shortid.generate();
+		dao.open(sql,[idCotizacion,numDetalleCotizacion,detalle.IDPARTE,detalle.CANTIDAD,detalle.SUBTOTAL,detalle.PRECIO],true,null);
+		})
 
-	var detallesCotizacion = req.body.detallesCotizacion;
-	console.log(detallesCotizacion)
-	//insertar detalles cotizacion
-	detallesCotizacion.forEach(function(detalle){
-		sql = "INSERT INTO detalleCotizacion (idCotizacion,numDetalleCotizacion,idParte,cantidad,subtotal,precio_unitario) "+
-	"VALUES (:idCotizacion,:numDetalleCotizacion,:idParte,:cantidad,:subtotal,:precio_unitario)";
-	var numDetalleCotizacion = shortid.generate();
-	dao.open(sql,[idCotizacion,numDetalleCotizacion,detalle.IDPARTE,detalle.CANTIDAD,detalle.SUBTOTAL,detalle.PRECIO],true,null);
-	})
-	res.send("cotizacion registrada");
+		var idProceso = shortid.generate();
+		//insertar registro en la tabla proceso
+		sql = "INSERT INTO proceso(idProceso,idEmpleado,idCotizacion,idTipoProceso,fecha) VALUES "+
+		"(:idProceso,:idEmpleado,:idCotizacion,:idTipoProceso,sysdate)";
+		//tipo Proceso 1 es cotizacion;
+		dao.open(sql,[idProceso,idEmpleado,idCotizacion,1],true,null);
+		res.send("cotizacion registrada");
+	});
+
+	
+	
+
+	
 })
 
 

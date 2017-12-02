@@ -1,3 +1,4 @@
+ALTER TABLE proceso MODIFY idProceso varchar2(25);
 INSERT INTO tipocaracteristica (idtipocrc,detalle) VALUES (1,'marca');                                                                     
 INSERT INTO tipocaracteristica  (idtipocrc,detalle) VALUES (2,'cilindraje');
 INSERT INTO tipocaracteristica  (idtipocrc,detalle) VALUES (3,'color');
@@ -84,6 +85,7 @@ INSERT INTO banco (idbanco2,nombre,correo,telefono,direccion) VALUES (5001,'Fina
 INSERT INTO tipotarjeta (idTipoTarjeta,nombre) VALUES (502,'EFECTIVO');
 INSERT INTO tipotarjeta (idTipoTarjeta,nombre) VALUES (505,'CHEQUE');
 INSERT INTO tipotarjeta (idTipoTarjeta,nombre) VALUES (507,'TARJETA');
+INSERT INTO tipoProceso(idTipoProceso,nombre) VALUES (1,'cotizacion');
 
 
 
