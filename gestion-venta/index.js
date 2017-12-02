@@ -2,9 +2,18 @@ var express = require('express')
 var router = express.Router();
 var dao = require('../dao');
 
+var email = require('../email');
+
 router.get('/cotizacion',function(req,res){
 	sql = "SELECT idcotizacion cotizacion, cedula,total  FROM cotizacion WHERE fecha > sysdate-30";
 	dao.open(sql,[],false,res);
+})
+
+router.post('/email',function(req,res){
+	console.log('enviar email');
+	var datos = req.body;
+	console.log(datos);
+	email(datos);
 })
 
 router.get('/cotizacion/:idcotizacion',function(req,res){

@@ -276,6 +276,17 @@ app.factory("Dao",['$http',function($http){
 			})
 	}
 
+	function enviarCorreo(datos,callback){
+		hacerPeticion('POST','/email/',datos)
+		.then(function(res){
+				callback (null,res.data);
+			})
+			//ocurrio algun error
+			.catch(function(err){
+				callback(err,null);
+			})
+	}
+
 	return{
 		getClientes:getClientes,
 		insertarCliente:insertarCliente,
@@ -291,7 +302,8 @@ app.factory("Dao",['$http',function($http){
 		getPrecioAuto:getPrecioAuto,
 		buscarCotizacionPorCedula:buscarCotizacionPorCedula,
 		getMediosPago:getMediosPago,
-		getBancosAliados:getBancosAliados
+		getBancosAliados:getBancosAliados,
+		enviarCorreo:enviarCorreo
 	}
 }])
 
@@ -548,8 +560,17 @@ app.controller('controladorVentas',['$scope','Dao',function($scope,Dao){
 	$scope.seleccionarBanco = function(banco,valor){
 		console.log("selecionar banco");
 		console.log(banco.CORREO);
-		console.log(valor);
-		console.log($scope.cotizacionSeleccionada.CEDULA);
+		Dao.enviarCorreo({
+			subject:'Solicitud de credito',
+			service:'hotmail',
+			from:'concecionarioUD@hotmail.com',
+			pass:'BasesDeDatos1',
+			to:'tony_jason@hotmail.com',
+			mensaje:'El cliente identificado con la cedula: '+$scope.cotizacionSeleccionada.CEDULA+
+			" Desea adquirir un credito por el valor de: "+valor+"\n\n Atentamente: ConcecionarioUD"
+		},function(err,result){
+			console.log(result);
+		})
 	}
 
 	$scope.volver2 = function(menu){
