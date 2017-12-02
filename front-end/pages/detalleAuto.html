@@ -1,11 +1,11 @@
 <div class="panel panel-default">
   <div class="panel-heading">
-    <h3 class="panel-title"> <strong>{{autoSeleccionado.NOMBRE}}</strong> </h3>
+    <h3 class="panel-title"> <strong>Cotizacion para: {{autoSeleccionado.NOMBRE}}</strong> </h3>
     <br>
     <button class="btn btn-info" ng-click="volver('seleccionAuto')">Volver</button>
   </div>
   <div class="panel-body">
-    <h4>Caracteristicas</h4>
+     <h4>Caracteristicas</h4>
     <table class="table table-hover">
     <th>Caracteristica</th>
     <th>Detalle</th>
@@ -13,6 +13,19 @@
       <td>{{caracteristica.CARACTERISTICA}}</td>
       <td>{{caracteristica.DETALLE}}</td>
     </tr>
+    </table>
+    <h4>Precio Base</h4>
+    <table class="table table-hover">
+      <th>ITEM</th>
+      <th>PRECIO</th>
+      <th>CANTIDAD</th>
+      <th>SUBTOTAL</th>
+    <tr>
+      <td>{{autoSeleccionado.NOMBRE}}</td>
+      <td>{{precioAuto.PRECIO | currency:"COP $ "}}</td>
+      <td>1</td>
+      <td>{{precioAuto.PRECIO | currency:"COP $ "}}</td>
+    </tr>  
     </table>
     <h4>Partes incluidas</h4>
     <table class="table table-hover">
@@ -28,10 +41,11 @@
       <td ng-repeat ="detalle in accesorioAgr">{{detalle}}</td>
     </tr>
     </table>
+    <h3>TOTAL : {{total | currency:"COP $ "}}</h3>
+    <br>
     <h4>Agregar Accesorios</h4>
     <table class="table table-hover">
     <th ng-repeat="(key,val) in accesorios[0]">{{key}}</th>
-    <th>Cantidad</th>
     <tr  ng-repeat ="accesorio in accesorios">
       <td ng-repeat ="detalle in accesorio">{{detalle}}</td>
       <td><button class="btn btn-success" ng-click="agregarAccesorio(accesorio)">agregar</button></td>
@@ -39,5 +53,6 @@
     </table>
   </div>
    <div class="panel-footer">
+    <button class="btn btn-success" ng-click ="guardarCotizacion()">Guardar cotizacion</button>
  </div>
 </div>

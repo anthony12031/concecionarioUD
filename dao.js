@@ -6,8 +6,10 @@ oracle.outFormat = oracle.OBJECT;
 function error(err,rs,cn){
 	if(err){
 		console.log(err.message);
-		rs.set('Content-Type','application/json').status(500);
-		rs.send(err.message);
+		if(rs){
+			rs.set('Content-Type','application/json').status(500);
+			rs.send(err.message);
+		}
 		if(cn != null)
 			close(cn);
 		return -1
@@ -21,11 +23,16 @@ function open(sql,binds,dml,rs){
 		if(error(err,rs,null)==-1) return;
 		con.execute(sql,binds,{autoCommit:dml},function(err,result){
 			if(error(err,rs,con)==-1) return;
-			rs.set('Content-Type','application/json').status(200);
-			if(dml)
+			if(rs)
+				rs.set('Content-Type','application/json').status(200);
+			if(dml){
+				if(rs)
 				rs.send(JSON.stringify(result.rowsAffected));
+			}
+				
 			else{
 				//console.log(JSON.stringify(result.rows));
+				if(rs)
 				rs.send(JSON.stringify(result.rows))
 			}
 			close(con)    
