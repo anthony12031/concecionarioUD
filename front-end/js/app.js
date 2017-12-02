@@ -51,6 +51,37 @@ app.directive('detalleAuto',[function(){
 	}
 }])
 
+
+
+
+
+
+
+
+app.directive('seleccionCotizacion',[function(){
+	return {
+		templateUrl:'pages/seleccionCotizacion.html'
+	}
+}])
+
+app.directive('detalleCotizacion',[function(){
+	return {
+		templateUrl:'pages/detalleCotizacion.html'
+	}
+}])
+
+app.directive('seleccionPago',[function(){
+	return {
+		templateUrl:'pages/seleccionPago.html'
+	}
+}])
+
+app.directive('detallePago30',[function(){
+	return {
+		templateUrl:'pages/detallePago30.html'
+	}
+}])
+
 app.factory("Dao",['$http',function($http){
 
 	//metodo GET,POST,PUT,DELETE
@@ -134,6 +165,21 @@ app.factory("Dao",['$http',function($http){
 			})
 	}
 
+
+
+	function getCotizaciones(callback){
+		hacerPeticion('GET','/cotizacion',null)
+			//peticion exitosa
+			//res.data contiene la respuesta
+			.then(function(res){
+				callback (null,res.data);
+			})
+			//ocurrio algun error
+			.catch(function(err){
+				callback(err,null);
+			})
+	}
+
 	function getAccesorios(callback){
 		hacerPeticion('GET','/autos/accesorios/',null)
 		.then(function(res){
@@ -155,6 +201,18 @@ app.factory("Dao",['$http',function($http){
 			})
 	}
 
+
+	function getDetalleCotizacion(idCotizacion,callback){
+		hacerPeticion('GET','/cotizacion/'+ idCotizacion,null)
+		.then(function(res){
+				callback (null,res.data);
+			})
+			//ocurrio algun error
+			.catch(function(err){
+				callback(err,null);
+			})
+	}
+
 	function getPrecioAuto(idAuto,callback){
 		hacerPeticion('GET','/autos/precio/'+idAuto,null)
 		.then(function(res){
@@ -164,7 +222,7 @@ app.factory("Dao",['$http',function($http){
 			.catch(function(err){
 				callback(err,null);
 			})
-	}
+	}	
 
 	function almacenarCotizacion(cedula,idEmpleado,detallesCotizacion,idAuto,idHistPrecioAuto,callback){
 		var datos = {
@@ -175,6 +233,7 @@ app.factory("Dao",['$http',function($http){
 			idHistPrecioAuto:idHistPrecioAuto
 		}
 		hacerPeticion('POST','/cotizaciones/',datos)
+
 		.then(function(res){
 				callback (null,res.data);
 			})
@@ -184,7 +243,6 @@ app.factory("Dao",['$http',function($http){
 			})
 	}
 
-	
 	return{
 		getClientes:getClientes,
 		insertarCliente:insertarCliente,
@@ -192,10 +250,18 @@ app.factory("Dao",['$http',function($http){
 		getAutos:getAutos,
 		getDetalleAuto:getDetalleAuto,
 		getPartesIncluidas:getPartesIncluidas,
+
+
+
+		getCotizaciones:getCotizaciones,
+		getDetalleCotizacion:getDetalleCotizacion,
+		getDetallePago30:getDetallePago30
+
 		getAccesorios:getAccesorios,
 		agregarAccesorio:agregarAccesorio,
 		almacenarCotizacion:almacenarCotizacion,
 		getPrecioAuto:getPrecioAuto
+
 	}
 }])
 
@@ -370,5 +436,39 @@ app.controller('controladorCotizacion',['$scope','Dao',function($scope,Dao){
  //pdfMake.createPdf(docDefinition).download('optionalName.pdf');
 
 app.controller('controladorVentas',['$scope','Dao',function($scope,Dao){
+
+	Dao.getCotizaciones(function(err,result){
+			$scope.cotizaciones = result;
+			console.log(result);
+	});
+
+	$scope.seleccionarCotizacion = function(auto,element){
+		$scope.cotizacionSeleccionada = auto;
+		$('.rowCotizacion').removeClass('success');
+		$(element).addClass('success');
 		
+		Dao.getDetalleCotizacion($scope.cotizacionSeleccionada.COTIZACION,function(err,result){
+			console.log(result);
+			$scope.detalleCotizacion = result;			
+			$('#seleccion-cotizacion').hide();
+			$('#detalle-cotizacion').show();
+		})
+	}
+
+	$scope.volver2 = function(menu){
+		if(menu == 'seleccionCotizacion'){
+			$('#seleccion-cotizacion').show();
+			$('#detalle-cotizacion').hide();
+			$('#seleccion-pago').hide();	
+		}
+
+		if(menu == 'pago'){			
+			$('#seleccion-pago').show();			
+		}
+
+		if(menu == 'treinta'){			
+			$('#detalle-pago30').show();			
+		}
+		
+	}	
 }])
