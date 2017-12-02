@@ -304,6 +304,70 @@ app.controller('controladorCotizacion',['$scope','Dao',function($scope,Dao){
 
 }])
 
+ var docDefinition = { content: [
+ 	{text:'concecionarioUD',style:"empresa"},
+ 	{text:'Cotizacion para automovil chrevolet',style:'header'},
+ 	{text:'Cliente',style:'subtitulo'},
+ 	{text:[
+ 		{text:'Nombre: ',bold:true},'Anthony Vargas  ',
+ 		{text:' Cedula: ',bold:true},'1023933551'
+ 		]
+ 	},
+ 	{text:'Caracteristicas del vehiculo',style:'subtitulo'},
+ 	{style:'tabla',table:{
+ 		headerRows: 1,
+        widths: [ 100, 100],
+        body:[
+        [ 'Caracteristica', 'Detalle'],
+ 			 ['Marca','Nissan']
+        ]
+ 	}
+ 	},
+ 	{text:'Precio base',style:'subtitulo'},
+ 	{style:'tabla',table:{
+ 		headerRows: 1,
+        widths: [ 100, 100,100,100],
+        body:[
+        [ 'Item', 'Precio','Cantidad','SUBTOTAL'],
+ 			 ['Nissan','50 millones',1,'50 millones']
+        ]
+ 	}
+ 	},
+ 	{text:'Partes incluidas',style:'subtitulo'},
+ 	{style:'tabla',table:{
+ 		headerRows: 1,
+        widths: [ 100, 100,100,100],
+        body:[
+        [ 'Parte', 'Precio','Cantidad','SUBTOTAL'],
+ 			 ['Condensador','0',1,'0']
+        ]
+ 	}
+ 	}	
+ 	],
+ 	styles:{
+ 		tabla:{
+ 			margin:[0,10,0,10]
+ 		},
+ 		subtitulo:{
+ 			bold:true,
+ 			fontSize:16,
+ 			margin:[0,10,0,10]
+ 		},
+ 		empresa:{
+			bold:true,
+ 			fontSize:14,
+ 			// margin: [left, top, right, bottom]
+ 			margin:[0,0,0,10]
+ 		},
+ 		header:{
+ 			bold:true,
+ 			fontSize:22,
+ 			margin:[0,0,0,10]
+ 		}
+ 	}
+ 	 };
+ // download the PDF
+ //pdfMake.createPdf(docDefinition).download('optionalName.pdf');
 
 app.controller('controladorVentas',['$scope','Dao',function($scope,Dao){
 		
