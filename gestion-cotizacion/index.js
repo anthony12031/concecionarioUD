@@ -67,18 +67,20 @@ router.post('/cotizaciones',function(req,res){
 	var idAuto = req.body.idAuto;
 	var cedula = req.body.cedula;
 	var idEmpleado = req.body.idEmpleado;
-	console.log(idAuto)
+	var total = req.body.total;
+	/*console.log(idAuto)
 	console.log(idHistPrecioAuto)
 	console.log(cedula)
 	console.log(idEmpleado)
 	console.log(detallesCotizacion)
-	console.log(idCotizacion)
+	console.log(idCotizacion)*/
+	console.log(total)
 	var detallesCotizacion = req.body.detallesCotizacion;
 	//insertar registro de la cotizacion
-	sql = "INSERT INTO cotizacion (idCotizacion,idEmpleado,cedula,idAuto,idHistPrecioAuto,fecha) VALUES "+
-	"(:idCotizacion,:idEmpleado,:cedula,:idAuto,:idHistPrecioAuto,sysdate)";
-	dao.open(sql,[idCotizacion,idEmpleado,cedula,idAuto,idHistPrecioAuto],true,null,function(result){
-		console.log(detallesCotizacion)
+	sql = "INSERT INTO cotizacion (idCotizacion,idEmpleado,cedula,idAuto,idHistPrecioAuto,total,fecha) VALUES "+
+	"(:idCotizacion,:idEmpleado,:cedula,:idAuto,:idHistPrecioAuto,:total,sysdate)";
+	dao.open(sql,[idCotizacion,idEmpleado,cedula,idAuto,idHistPrecioAuto,total],true,null,function(result){
+		//console.log(detallesCotizacion)
 		//insertar detalles cotizacion
 		detallesCotizacion.forEach(function(detalle){
 			sql = "INSERT INTO detalleCotizacion (idCotizacion,numDetalleCotizacion,idParte,cantidad,subtotal,precio_unitario) "+

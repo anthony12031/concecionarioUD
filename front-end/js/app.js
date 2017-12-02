@@ -224,13 +224,14 @@ app.factory("Dao",['$http',function($http){
 			})
 	}	
 
-	function almacenarCotizacion(cedula,idEmpleado,detallesCotizacion,idAuto,idHistPrecioAuto,callback){
+	function almacenarCotizacion(cedula,idEmpleado,detallesCotizacion,idAuto,idHistPrecioAuto,total,callback){
 		var datos = {
 			cedula:cedula,
 			idEmpleado:idEmpleado,
 			detallesCotizacion:detallesCotizacion,
 			idAuto:idAuto,
-			idHistPrecioAuto:idHistPrecioAuto
+			idHistPrecioAuto:idHistPrecioAuto,
+			total:total
 		}
 		hacerPeticion('POST','/cotizaciones/',datos)
 
@@ -356,8 +357,9 @@ app.controller('controladorCotizacion',['$scope','Dao',function($scope,Dao){
 		}
 		else{
 			Dao.almacenarCotizacion($scope.clienteSeleccionado.CEDULA,11111,detallesCotizacion,
-				$scope.autoSeleccionado.IDAUTO,$scope.precioAuto.IDHISTPRECIOAUTO,function(err,result){
+				$scope.autoSeleccionado.IDAUTO,$scope.precioAuto.IDHISTPRECIOAUTO,$scope.total,function(err,result){
 					console.log(result);
+					alert("cotizacion almacenada");
 			})
 		}
 	}

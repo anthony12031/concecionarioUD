@@ -1,4 +1,5 @@
 ALTER TABLE proceso MODIFY idProceso varchar2(25);
+ALTER TABLE cotizacion ADD total float;
 INSERT INTO tipocaracteristica (idtipocrc,detalle) VALUES (1,'marca');                                                                     
 INSERT INTO tipocaracteristica  (idtipocrc,detalle) VALUES (2,'cilindraje');
 INSERT INTO tipocaracteristica  (idtipocrc,detalle) VALUES (3,'color');
