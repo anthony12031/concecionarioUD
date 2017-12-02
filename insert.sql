@@ -83,9 +83,10 @@ INSERT INTO banco (idbanco2,nombre,correo,telefono,direccion) VALUES (4853,'Dinn
 INSERT INTO banco (idbanco2,nombre,correo,telefono,direccion) VALUES (4942,'TitanMoney','titanmmny@banco.com','2648017','Cll 35 Sur #56');
 INSERT INTO banco (idbanco2,nombre,correo,telefono,direccion) VALUES (4971,'Bolivariano','bolvcolombia@banco.com','9305782','Cra 10 #04-32');
 INSERT INTO banco (idbanco2,nombre,correo,telefono,direccion) VALUES (5001,'FinanzasG','financolombia@banco.com','1542389','Diag 89 #20 Norte');
-INSERT INTO tipotarjeta (idTipoTarjeta,nombre) VALUES (502,'EFECTIVO');
-INSERT INTO tipotarjeta (idTipoTarjeta,nombre) VALUES (505,'CHEQUE');
-INSERT INTO tipotarjeta (idTipoTarjeta,nombre) VALUES (507,'TARJETA');
+INSERT INTO medioPago (idMedioPago,detalle) VALUES (502,'Credito Bancario');
+INSERT INTO medioPago (idMedioPago,detalle) VALUES (505,'Credito Tarjeta');
+INSERT INTO medioPago (idMedioPago,detalle) VALUES (507,'Efectivo Tarjeta');
+INSERT INTO medioPago (idMedioPago,detalle) VALUES (508,'Efectivo');
 INSERT INTO tipoProceso(idTipoProceso,nombre) VALUES (1,'cotizacion');
 
 

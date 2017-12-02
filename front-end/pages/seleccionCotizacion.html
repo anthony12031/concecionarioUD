@@ -17,8 +17,7 @@
     <table class="table table-hover">
     <th ng-repeat="(key, value) in cotizaciones[0]">{{key}}</th>
     <tr class="rowCotizacion" ng-repeat ="cotizacion in cotizaciones" ng-click="seleccionarCotizacion(cotizacion,$event.currentTarget)">
-      <td>{{cotizacion.COTIZACION}}</td>
-      <td>{{cotizacion.CEDULA}}</td>
+      <td ng-repeat="detalle in cotizacion">{{detalle}}</td>
     </tr>
     </table>
   </div>   

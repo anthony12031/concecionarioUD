@@ -254,6 +254,28 @@ app.factory("Dao",['$http',function($http){
 			})
 	}
 
+	function getMediosPago(callback){
+		hacerPeticion('GET','/mediosPago')
+		.then(function(res){
+				callback (null,res.data);
+			})
+			//ocurrio algun error
+			.catch(function(err){
+				callback(err,null);
+			})
+	}
+
+	function getBancosAliados(callback){
+		hacerPeticion('GET','/bancosAliados')
+		.then(function(res){
+				callback (null,res.data);
+			})
+			//ocurrio algun error
+			.catch(function(err){
+				callback(err,null);
+			})
+	}
+
 	return{
 		getClientes:getClientes,
 		insertarCliente:insertarCliente,
@@ -267,8 +289,9 @@ app.factory("Dao",['$http',function($http){
 		agregarAccesorio:agregarAccesorio,
 		almacenarCotizacion:almacenarCotizacion,
 		getPrecioAuto:getPrecioAuto,
-		buscarCotizacionPorCedula:buscarCotizacionPorCedula
-
+		buscarCotizacionPorCedula:buscarCotizacionPorCedula,
+		getMediosPago:getMediosPago,
+		getBancosAliados:getBancosAliados
 	}
 }])
 
@@ -479,8 +502,8 @@ app.controller('controladorVentas',['$scope','Dao',function($scope,Dao){
 			console.log(result);
 	});
 
-	$scope.seleccionarCotizacion = function(auto,element){
-		$scope.cotizacionSeleccionada = auto;
+	$scope.seleccionarCotizacion = function(cotizacion,element){
+		$scope.cotizacionSeleccionada = cotizacion;
 		$('.rowCotizacion').removeClass('success');
 		$(element).addClass('success');
 		
@@ -507,6 +530,21 @@ app.controller('controladorVentas',['$scope','Dao',function($scope,Dao){
 
 	}
 
+	$scope.selecionarMedioPago = function(medioPago,valor,porcentaje){
+		console.log(medioPago);
+		console.log(valor);
+		//es un credito bancario
+		if(medioPago.IDMEDIOPAGO == 502){
+			console.log("credito bancario");
+			$('#medioPago-'+porcentaje).hide();
+			$('#bancos-aliados-'+porcentaje).show();
+			Dao.getBancosAliados(function(err,result){
+				console.log(result);
+				$scope.bancosAliados = result;
+			})
+		}
+	}
+
 	$scope.volver2 = function(menu){
 		if(menu == 'seleccionCotizacion'){
 			$('#seleccion-cotizacion').show();
@@ -515,7 +553,11 @@ app.controller('controladorVentas',['$scope','Dao',function($scope,Dao){
 		}
 
 		if(menu == 'pago'){			
-			$('#seleccion-pago').show();			
+			$('#seleccion-pago').show();
+			Dao.getMediosPago(function(err,result){
+				console.log(result);
+				$scope.mediosPago = result;
+			})			
 		}
 
 		if(menu == 'treinta'){			

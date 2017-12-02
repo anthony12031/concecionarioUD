@@ -3,14 +3,47 @@
   <div class="panel-heading">
     <h3 class="panel-title"> <strong>Seleccione El Modelo de Pago</strong> </h3>
     <br>
+    TOTAL: {{cotizacionSeleccionada.TOTAL | currency:"COP $ "}}
     <div class="row">    
     </div>
   </div>
   <div class="panel-body">    
     <table class="table table-hover">     
     <tr>
-      <td> <div class="panel-footer"> <button class="btn btn-info" ng-click="volver2('treinta')">30%</button> </div> </td>
-      <td> <div class="panel-footer"> <button class="btn btn-info" ng-click="volver2('setenta')">70%</button> </div>  </td>
+      <td> 
+        <div class="panel-footer"> <button class="btn btn-info">30% : {{cotizacionSeleccionada.TOTAL*0.3 | currency:"COP $ "}}</button> </div>
+
+        <div class="list-group"  id="medioPago-30">
+          <a href="#" class="list-group-item" ng-repeat="medioPago in mediosPago" ng-click="selecionarMedioPago(medioPago,cotizacionSeleccionada.TOTAL*0.3,30 )">{{medioPago.MEDIOPAGO}}</a>
+        </div>
+
+        <div class="col-md-4" style="display: none"  id="bancos-aliados-30">
+        <table class="table table-hover">
+          <th ng-repeat="(key,val) in bancosAliados[0]">{{key}}</th>
+          <tr  ng-repeat ="bancoAliado in bancosAliados">
+            <td ng-repeat ="detalle in bancoAliado">{{detalle}}</td>
+          </tr>
+          </table>
+        </div>
+
+      </td>
+      <td>
+       <div class="panel-footer"> <button class="btn btn-info" >70% : {{cotizacionSeleccionada.TOTAL*0.7 | currency:"COP $ "}}</button> </div> 
+
+        <div class="list-group"  id="medioPago-70">
+          <a href="#" class="list-group-item" ng-repeat="medioPago in mediosPago" ng-click="selecionarMedioPago(medioPago,cotizacionSeleccionada.TOTAL*0.7,70)">{{medioPago.MEDIOPAGO}}</a>
+        </div>
+
+        <div class="col-md-4" style="display: none" id="bancos-aliados-70">
+        <table class="table table-hover">
+          <th ng-repeat="(key,val) in bancosAliados[0]">{{key}}</th>
+          <tr  ng-repeat ="bancoAliado in bancosAliados">
+            <td ng-repeat ="detalle in bancoAliado">{{detalle}}</td>
+          </tr>
+          </table>
+        </div>
+
+     </td>
     </tr>    
     </table>
   </div>   
