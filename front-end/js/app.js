@@ -570,6 +570,7 @@ app.controller('controladorVentas',['$scope','Dao',function($scope,Dao){
 			" Desea adquirir un credito por el valor de: "+valor+"\n\n Atentamente: ConcecionarioUD"
 		},function(err,result){
 			console.log(result);
+			alert(result);
 		})
 	}
 

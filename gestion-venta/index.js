@@ -14,6 +14,7 @@ router.post('/email',function(req,res){
 	var datos = req.body;
 	console.log(datos);
 	email(datos);
+	res.send("solicitud enviada");
 })
 
 router.get('/cotizacion/:idcotizacion',function(req,res){
