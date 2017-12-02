@@ -304,8 +304,10 @@ app.controller('controladorCotizacion',['$scope','Dao',function($scope,Dao){
 		})
 	}
 
-	$scope.total = 0;
+	
 	$scope.seleccionarAuto = function(auto,element){
+		$scope.total = 0;
+		$scope.accesoriosAgregados = [];
 		$scope.autoSeleccionado = auto;
 		$('.rowAuto').removeClass('success');
 		$(element).addClass('success');
@@ -334,9 +336,6 @@ app.controller('controladorCotizacion',['$scope','Dao',function($scope,Dao){
 		})
 	}
 
-
-
-	$scope.accesoriosAgregados = [];
 	$scope.agregarAccesorio = function(accesorio){
 		console.log(accesorio);
 		var nuevo_accesorio = {};
@@ -363,25 +362,37 @@ app.controller('controladorCotizacion',['$scope','Dao',function($scope,Dao){
 		}
 	}
 
-}])
+	$scope.generarPDFCotizacion = function(){
+	console.log("generar pdf");
+	var caracteristicas = [['Caracteristica', 'Detalle']];
+	$scope.detalleAuto.forEach(function(el){
+		caracteristicas.push([el.CARACTERISTICA,el.DETALLE]);
+	})	
+	var partesIncluidas = [[ 'Parte', 'Precio','Cantidad','SUBTOTAL']]
+	$scope.partesIncluidas.forEach(function(el){
+		partesIncluidas.push([el.PARTE,el.PRECIO,el.CANTIDAD,el.SUBTOTAL]);
+	})
 
- var docDefinition = { content: [
- 	{text:'concecionarioUD',style:"empresa"},
- 	{text:'Cotizacion para automovil chrevolet',style:'header'},
+	var partesAgregadas = [[ 'Parte', 'Precio','Cantidad','SUBTOTAL']]
+	$scope.accesoriosAgregados.forEach(function(el){
+		partesAgregadas.push([el.PARTE,el.PRECIO,el.CANTIDAD,el.SUBTOTAL]);
+	})
+
+	var docDefinition = { content: [
+ 	{text:'ConcecionarioUD',style:"empresa"},
+ 	{text:'Cotizacion para automovil: '+$scope.autoSeleccionado.NOMBRE,style:'header'},
+ 	{text:'Fecha: '+ moment().format('MMMM Do YYYY, h:mm:ss a'),style:'subtitulo'},
  	{text:'Cliente',style:'subtitulo'},
  	{text:[
- 		{text:'Nombre: ',bold:true},'Anthony Vargas  ',
- 		{text:' Cedula: ',bold:true},'1023933551'
+ 		{text:'Nombre: ',bold:true},$scope.clienteSeleccionado.NOMBRE,
+ 		{text:' Cedula: ',bold:true},$scope.clienteSeleccionado.CEDULA
  		]
  	},
  	{text:'Caracteristicas del vehiculo',style:'subtitulo'},
  	{style:'tabla',table:{
  		headerRows: 1,
         widths: [ 100, 100],
-        body:[
-        [ 'Caracteristica', 'Detalle'],
- 			 ['Marca','Nissan']
-        ]
+        body:caracteristicas
  	}
  	},
  	{text:'Precio base',style:'subtitulo'},
@@ -390,7 +401,7 @@ app.controller('controladorCotizacion',['$scope','Dao',function($scope,Dao){
         widths: [ 100, 100,100,100],
         body:[
         [ 'Item', 'Precio','Cantidad','SUBTOTAL'],
- 			 ['Nissan','50 millones',1,'50 millones']
+ 			 [$scope.autoSeleccionado.NOMBRE,$scope.precioAuto.PRECIO,1,$scope.precioAuto.PRECIO]
         ]
  	}
  	},
@@ -398,14 +409,27 @@ app.controller('controladorCotizacion',['$scope','Dao',function($scope,Dao){
  	{style:'tabla',table:{
  		headerRows: 1,
         widths: [ 100, 100,100,100],
-        body:[
-        [ 'Parte', 'Precio','Cantidad','SUBTOTAL'],
- 			 ['Condensador','0',1,'0']
-        ]
+        body:partesIncluidas
  	}
- 	}	
+ 	},
+ 	{text:'Accesorios agregados',style:'subtitulo'},
+ 	{style:'tabla',table:{
+ 		headerRows: 1,
+        widths: [ 100, 100,100,100],
+        body:partesAgregadas
+ 	}
+ 	},
+ 	{text:[
+ 		{text:'TOTAL: '+$scope.total,style:'total'}
+ 		]}	
+ 		
  	],
  	styles:{
+ 		total:{
+			bold:true,
+ 			fontSize:14,
+ 			margin:[0,20,0,10]	
+ 		},
  		tabla:{
  			margin:[0,10,0,10]
  		},
@@ -428,7 +452,12 @@ app.controller('controladorCotizacion',['$scope','Dao',function($scope,Dao){
  	}
  	 };
  // download the PDF
- //pdfMake.createPdf(docDefinition).download('optionalName.pdf');
+ pdfMake.createPdf(docDefinition).download('optionalName.pdf');
+	}
+
+}])
+
+
 
 app.controller('controladorVentas',['$scope','Dao',function($scope,Dao){
 
