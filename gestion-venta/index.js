@@ -16,5 +16,14 @@ router.get('/cotizacion/:idcotizacion',function(req,res){
 	dao.open(sql,[],false,res);
 })
 
+router.get('/cotizaciones/cliente/:cedula',function(req,res){
+	var cedula = req.params.cedula;
+	console.log(cedula);
+	sql = "SELECT C.idCotizacion cotizacion,C.total,TP.nombre estado from tipoProceso TP,proceso P, "+
+	"cotizacion C WHERE P.idCotizacion = C.idCotizacion AND TP.idTipoProceso = P.idTipoProceso "+
+	"AND C.cedula= "+cedula;
+	dao.open(sql,[],false,res);
+})
+
 
 module.exports = router;

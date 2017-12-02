@@ -234,7 +234,17 @@ app.factory("Dao",['$http',function($http){
 			total:total
 		}
 		hacerPeticion('POST','/cotizaciones/',datos)
+		.then(function(res){
+				callback (null,res.data);
+			})
+			//ocurrio algun error
+			.catch(function(err){
+				callback(err,null);
+			})
+	}
 
+	function buscarCotizacionPorCedula(cedula,callback){
+		hacerPeticion('GET','/cotizaciones/cliente/'+cedula)
 		.then(function(res){
 				callback (null,res.data);
 			})
@@ -256,7 +266,8 @@ app.factory("Dao",['$http',function($http){
 		getAccesorios:getAccesorios,
 		agregarAccesorio:agregarAccesorio,
 		almacenarCotizacion:almacenarCotizacion,
-		getPrecioAuto:getPrecioAuto
+		getPrecioAuto:getPrecioAuto,
+		buscarCotizacionPorCedula:buscarCotizacionPorCedula
 
 	}
 }])
@@ -479,6 +490,21 @@ app.controller('controladorVentas',['$scope','Dao',function($scope,Dao){
 			$('#seleccion-cotizacion').hide();
 			$('#detalle-cotizacion').show();
 		})
+	}
+
+	$scope.buscarCotizacionPorCedula = function(cedula){
+		Dao.buscarCotizacionPorCedula(cedula,function(err,result){
+			console.log(result);
+			$scope.cotizacionesCliente = result;
+			$('#todas-cotizaciones').hide();
+			$('#cliente-cotizaciones').show();
+		})
+	}
+
+	$scope.volverTodasCotizaciones = function(){
+			$('#todas-cotizaciones').show();
+			$('#cliente-cotizaciones').hide();
+
 	}
 
 	$scope.volver2 = function(menu){

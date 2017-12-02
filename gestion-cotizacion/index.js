@@ -68,12 +68,7 @@ router.post('/cotizaciones',function(req,res){
 	var cedula = req.body.cedula;
 	var idEmpleado = req.body.idEmpleado;
 	var total = req.body.total;
-	/*console.log(idAuto)
-	console.log(idHistPrecioAuto)
-	console.log(cedula)
-	console.log(idEmpleado)
-	console.log(detallesCotizacion)
-	console.log(idCotizacion)*/
+
 	console.log(total)
 	var detallesCotizacion = req.body.detallesCotizacion;
 	//insertar registro de la cotizacion
@@ -98,10 +93,6 @@ router.post('/cotizaciones',function(req,res){
 		res.send("cotizacion registrada");
 	});
 
-	
-	
-
-	
 })
 
 
