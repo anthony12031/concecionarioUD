@@ -6,7 +6,9 @@ var shortid = require('shortid');
 var email = require('../email');
 
 router.get('/cotizacion',function(req,res){
-	sql = "SELECT idcotizacion cotizacion, cedula,total  FROM cotizacion WHERE fecha > sysdate-30";
+	sql = "SELECT C.idcotizacion cotizacion, C.cedula,C.total,TP.nombre estado  FROM "+
+	"cotizacion C , proceso P,tipoProceso TP  WHERE C.fecha > sysdate-30 AND "+
+	"P.idCotizacion = C.idCotizacion AND P.idTipoProceso = 1 AND TP.idTipoProceso = P.idTipoProceso";
 	dao.open(sql,[],false,res);
 })
 
@@ -56,6 +58,9 @@ router.post('/acuerdos',function(req,res){
 	//insertar registro en proceso
 	if(haySolicitudCredito){
 		console.log("hay solicitud de credito");
+		//var sql = "UPDATE proceso SET idTipoProceso = :idProceso WHERE idCotizacion=:idCotizacion AND idProceso= "+
+		//"(SELECT idProceso from proceso)"
+		//dao.open(sql,[idEstudioCredito,cotizacion.COTIZACION],true,null);
 		var sql = "INSERT INTO proceso(idProceso,idEmpleado,idCotizacion,idTipoProceso,fecha) "+
 		"VALUES (:idProceso,:idEmpleado,:idCotizacion,:idTipoProceso,sysdate)";
 		dao.open(sql,[idProceso,empleado.idEmpleado,cotizacion.COTIZACION,idEstudioCredito],true,null);

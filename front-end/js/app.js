@@ -12,7 +12,7 @@ app.config(function($routeProvider,$locationProvider) {
         templateUrl : "pages/login.html"
     })
     .when("/estudioCredito",{
-    	templateUrl:"pages/estudioCredito.html"
+    	templateUrl:"pages/gestionCredito.html"
     })
     .when("/separarAuto",{
     	templateUrl:"pages/separarAuto.html"
@@ -94,6 +94,7 @@ app.directive('mediosPago',[function(){
 	}
 }])
 
+
 app.directive('separarAutoSeleccionCotizacion',[function(){
 	return {
 		templateUrl:'pages/separarAutoSeleccionCotizacion.html'
@@ -103,6 +104,24 @@ app.directive('separarAutoSeleccionCotizacion',[function(){
 app.directive('acuerdosPago',[function(){
 	return {
 		templateUrl:'pages/acuerdosPago.html'
+	}
+}]);
+
+app.directive('seleccionCotizacionCredito',[function(){
+	return {
+		templateUrl:'pages/seleccionCotizacionCredito.html'
+	}
+}])
+
+app.directive('detalleCotizacionCredito',[function(){
+	return {
+		templateUrl:'pages/detalleCotizacionCredito.html'
+	}
+}])
+
+app.directive('detalleCredito',[function(){
+	return {
+		templateUrl:'pages/detalleCredito.html'
 	}
 }])
 
@@ -320,6 +339,29 @@ app.factory("Dao",['$http',function($http){
 			.catch(function(err){
 				callback(err,null);
 			})
+		}
+	function getCotizacionesCredito(callback){
+		hacerPeticion('GET','/cotizacionCredito',null)
+			//peticion exitosa
+			//res.data contiene la respuesta
+			.then(function(res){
+				callback (null,res.data);
+			})
+			//ocurrio algun error
+			.catch(function(err){
+				callback(err,null);
+			})
+	}
+
+	function getDetalleCotizacionCredito(idCotizacion,callback){		
+		hacerPeticion('GET','/cotizacionCredito/'+ idCotizacion,null)
+		.then(function(res){
+				callback (null,res.data);
+			})
+			//ocurrio algun error
+			.catch(function(err){
+				callback(err,null);
+			})
 	}
 
 	function buscarCotizacionPorCedulaSepararAuto(cedula,callback){
@@ -331,7 +373,19 @@ app.factory("Dao",['$http',function($http){
 			.catch(function(err){
 				callback(err,null);
 			})
+
+}
+	function buscarCotizacionCreditoPorCedula(cedula,callback){
+		hacerPeticion('GET','/cotizacionesCredito/cliente/'+cedula)
+		.then(function(res){
+				callback (null,res.data);
+			})
+			//ocurrio algun error
+			.catch(function(err){
+				callback(err,null);
+			})
 	}
+
 
 	function getAcuerdosPago(cotizacion,callback){
 		hacerPeticion('GET','/acuerdosPago/'+cotizacion.IDCOTIZACION)
@@ -344,8 +398,31 @@ app.factory("Dao",['$http',function($http){
 			})
 	}
 
+	function getDetalleCredito(idproceso,callback){
+		hacerPeticion('GET','/credito/'+ idproceso,null)
+		.then(function(res){
+				callback (null,res.data);
+			})
+			//ocurrio algun error
+			.catch(function(err){
+				callback(err,null);
+			})
+	}
+
+
 	function modificarAcuerdos(acuerdos,callback){
 		hacerPeticion('POST','/acuerdos/modificar',acuerdos)
+		then(function(res){
+				callback (null,res.data);
+			})
+			//ocurrio algun error
+			.catch(function(err){
+				callback(err,null);
+			})	
+	}
+
+	function modificarEstado(idproceso,callback){
+		hacerPeticion('PUT','/estado',{idproceso:idproceso})
 		.then(function(res){
 				callback (null,res.data);
 			})
@@ -375,7 +452,12 @@ app.factory("Dao",['$http',function($http){
 		registrarAcuerdos:registrarAcuerdos,
 		buscarCotizacionPorCedulaSepararAuto:buscarCotizacionPorCedulaSepararAuto,
 		getAcuerdosPago:getAcuerdosPago,
-		modificarAcuerdos:modificarAcuerdos
+		modificarAcuerdos:modificarAcuerdos,
+		getCotizacionesCredito:getCotizacionesCredito,
+		getDetalleCotizacionCredito:getDetalleCotizacionCredito,
+		buscarCotizacionCreditoPorCedula:buscarCotizacionCreditoPorCedula,
+		getDetalleCredito:getDetalleCredito,
+		modificarEstado:modificarEstado
 	}
 }])
 
@@ -773,4 +855,153 @@ app.controller('controladorVentas',['$scope','Dao',function($scope,Dao){
 		}
 		
 	}	
+}])
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+app.controller('controladorCredito',['$scope','Dao',function($scope,Dao){
+
+	Dao.getCotizacionesCredito(function(err,result){
+			$scope.cotizacionesCreditos = result;
+			console.log(result);
+	});
+
+	$scope.seleccionarCotizacionCredito = function(cotizacion,element){
+		$scope.cotizacionCreditoSeleccionada = cotizacion;		
+		$('.rowCotizacionCredito').removeClass('success');
+		$(element).addClass('success');
+		
+		Dao.getDetalleCotizacionCredito($scope.cotizacionCreditoSeleccionada.COTIZACION,function(err,result){
+
+			$scope.detalleCotizacionCredito = result;
+			console.log(result);			
+			$('#seleccion-cotizacion-credito').hide();
+			$('#detalle-cotizacion-credito').show();
+		})
+	}
+
+	$scope.buscarCotizacionCreditoPorCedula = function(cedula){
+		Dao.buscarCotizacionCreditoPorCedula(cedula,function(err,result){
+			console.log(result);
+			$scope.cotizacionesCreditosCliente = result;
+			$('#todas-cotizaciones-credito').hide();
+			$('#cliente-cotizaciones-credito').show();
+		})
+	}
+
+
+	$scope.volverTodasCotizacionesCredito = function(){
+			$('#todas-cotizaciones-credito').show();
+			$('#cliente-cotizaciones-credito').hide();
+
+	}
+
+	$scope.seleccionarCredito = function(credito,element){		
+		$scope.creditoSeleccionado = credito;		
+		$('.rowCotizacionCredito').removeClass('success');
+		$(element).addClass('success');
+		
+		Dao.getDetalleCredito($scope.creditoSeleccionado.PROCESO,function(err,result){
+			$scope.detalleCredito = result;
+			console.log(result);			
+			$('#detalle-credito').show();
+		})
+	}
+
+	$scope.cambiarEstado = function(cot){
+		
+		Dao.modificarEstado(cot,function(err,result){
+			
+			console.log(result);
+		})
+	}
+	$scope.volver3 = function(menu,porcentaje,index){
+		if(menu == 'seleccionCotizacionCredito'){
+			$('#seleccion-cotizacion-credito').show();
+			$('#detalle-cotizacion-credito').hide();				
+		}				
+	}	
+
 }])
