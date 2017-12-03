@@ -5,7 +5,7 @@ app.config(function($routeProvider,$locationProvider) {
     .when("/", {
         templateUrl : "pages/gestionCotizacion.html"
     })
-    .when("/ventas", {
+    .when("/acuerdoPago", {
         templateUrl : "pages/gestionVentas.html"
     })
     .when("/login", {
@@ -76,6 +76,18 @@ app.directive('seleccionPago',[function(){
 app.directive('detallePago30',[function(){
 	return {
 		templateUrl:'pages/detallePago30.html'
+	}
+}])
+
+app.directive('bancosAliados',[function(){
+	return {
+		templateUrl:'pages/bancosAliados.html'
+	}
+}])
+
+app.directive('mediosPago',[function(){
+	return {
+		templateUrl:'pages/mediosPago.html'
 	}
 }])
 
@@ -511,6 +523,30 @@ app.controller('controladorVentas',['$scope','Dao',function($scope,Dao){
 			console.log(result);
 	});
 
+	$scope.acuerdosPago30 = {};
+	var index30 = 0;
+	$scope.agregarPago30 = function(){
+		console.log("agregar pago 30: "+$scope.porcentaje30);
+		console.log($scope.cotizacionSeleccionada.TOTAL);
+		$scope.acuerdosPago30[index30]={
+			porcentaje:$scope.porcentaje30,
+			valor:$scope.cotizacionSeleccionada.TOTAL*$scope.porcentaje30,
+			index:index30
+		};
+		index30++;
+	}
+	$scope.acuerdosPago70 = {};
+	var index70 = 0;
+	$scope.agregarPago70 = function(){
+		console.log("agregar pago 70: "+$scope.porcentaje70);
+		$scope.acuerdosPago70[index70]={
+			porcentaje:$scope.porcentaje70,
+			valor:$scope.cotizacionSeleccionada.TOTAL*$scope.porcentaje70,
+			index:index70
+		};
+		index70++;
+	}
+
 	$scope.seleccionarCotizacion = function(cotizacion,element){
 		$scope.cotizacionSeleccionada = cotizacion;
 		$('.rowCotizacion').removeClass('success');
@@ -539,19 +575,42 @@ app.controller('controladorVentas',['$scope','Dao',function($scope,Dao){
 
 	}
 
-	$scope.selecionarMedioPago = function(medioPago,valor,porcentaje){
-		console.log(medioPago);
-		console.log(valor);
+	$scope.elminarAcuerdo = function(acuerdo,porcentaje){
+		console.log(porcentaje);
+		if(porcentaje == 30)
+			delete $scope.acuerdosPago30[acuerdo.index];
+		else
+			delete $scope.acuerdosPago70[acuerdo.index];
+	}
+
+	$scope.selecionarMedioPago = function(acuerdo,medioPago,
+		porcentaje,index){
+		acuerdo.medioPago = medioPago;
 		//es un credito bancario
 		if(medioPago.IDMEDIOPAGO == 502){
-			console.log("credito bancario");
-			$('#medioPago-'+porcentaje).hide();
-			$('#bancos-aliados-'+porcentaje).show();
+			console.log('#medios-'+porcentaje+"-"+index);
+			console.log('#bancos-'+porcentaje+"-"+index);
+			$('#medios-'+porcentaje+"-"+index).hide();
+			$('#bancos-'+porcentaje+"-"+index).show();
+
 			Dao.getBancosAliados(function(err,result){
 				console.log(result);
 				$scope.bancosAliados = result;
 			})
 		}
+	}
+
+	$scope.registrarAcuerdos = function(){
+		var total30=0;
+		var total70 = 0;
+		for(var key in $scope.acuerdosPago30){
+			total30 += parseFloat($scope.acuerdosPago30[key].porcentaje);
+		}
+		for(var key in $scope.acuerdosPago70){
+			total70 += parseFloat($scope.acuerdosPago70[key].porcentaje);
+		}
+		console.log("total30: "+total30);
+		console.log("total70: "+total70);
 	}
 
 	$scope.seleccionarBanco = function(banco,valor){
@@ -571,22 +630,18 @@ app.controller('controladorVentas',['$scope','Dao',function($scope,Dao){
 		})
 	}
 
-	$scope.volver2 = function(menu){
+	$scope.volver2 = function(menu,porcentaje,index){
 		if(menu == 'seleccionCotizacion'){
 			$('#seleccion-cotizacion').show();
 			$('#detalle-cotizacion').hide();
 			$('#seleccion-pago').hide();	
 		}
 
-		if(menu == 'medio-pago-30'){
-			$('#medioPago-30').show();
-			$('#bancos-aliados-30').hide();
+		if(menu == 'medio-pago'){
+			$('#medios-'+porcentaje+'-'+index).show();
+			$('#bancos-'+porcentaje+'-'+index).hide();
 		}
 
-		if(menu == 'medio-pago-70'){
-			$('#medioPago-70').show();
-			$('#bancos-aliados-70').hide();
-		}
 
 		if(menu == 'pago'){			
 			$('#seleccion-pago').show();

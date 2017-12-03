@@ -3,53 +3,58 @@
   <div class="panel-heading">
     <h3 class="panel-title"> <strong>Seleccione El Modelo de Pago</strong> </h3>
     <br>
-    TOTAL: {{cotizacionSeleccionada.TOTAL | currency:"COP $ "}}
+    <strong style="font-size:22px;">TOTAL: {{cotizacionSeleccionada.TOTAL | currency:"COP $ "}}</strong>
+    
     <div class="row">    
     </div>
   </div>
   <div class="panel-body">    
     <table class="table table-hover">     
     <tr>
+      <!-- pagos 30 -->
       <td> 
         <div class="panel-footer"> <button class="btn btn-info">30% : {{cotizacionSeleccionada.TOTAL*0.3 | currency:"COP $ "}}</button> </div>
-        <br>
-        <button class="btn btn-info" ng-click="volver2('medio-pago-30')"> Volver</button>
-        <br>
-        <div class="list-group"  id="medioPago-30">
-          <a href="#" class="list-group-item" ng-repeat="medioPago in mediosPago" ng-click="selecionarMedioPago(medioPago,cotizacionSeleccionada.TOTAL*0.3,30 )">{{medioPago.MEDIOPAGO}}</a>
-        </div>
+        <input type="" name="" placeholder="% de pago" ng-model="porcentaje30">
+        <button class="btn btn-warning" ng-click = "agregarPago30()">Agregar pago</button>
 
-        <div class="col-md-4" style="display: none" id="bancos-aliados-30">
-        <table class="table table-hover">
-          <th ng-repeat="(key,val) in bancosAliados[0]">{{key}}</th>
-          <tr  ng-repeat ="bancoAliado in bancosAliados" ng-click="seleccionarBanco(bancoAliado,cotizacionSeleccionada.TOTAL*0.3)">
-            <td ng-repeat ="detalle in bancoAliado">{{detalle}}</td>
-          </tr>
-          </table>
+        <div ng-repeat="acuerdo in acuerdosPago30">
+        <br>
+        <button class="btn btn-info" ng-click="volver2('medio-pago',porcentajePrincipal,$index)"> Volver</button>
+        <br>
+          <span>Porcentaje: {{acuerdo.porcentaje}}%</span>
+          <br>
+          <span>Valor: {{acuerdo.valor | currency:"COP $ "}}</span>
+          <div ng-init="porcentajePrincipal=30"></div>
+        <medios-pago id="medios-30-{{$index}}"></medios-pago>
+        <bancos-aliados style="display: none" id="bancos-30-{{$index}}"></bancos-aliados>
+        <button class="btn btn-danger" ng-click="elminarAcuerdo(acuerdo,porcentajePrincipal)">Eliminar</button>
         </div>
-
+        <br>
+        <button ng-click="registrarAcuerdos()"  class="btn btn-primary">Aceptar</button>
       </td>
+    <!-- pagos 30 -->
+    <!-- pagos 70 -->
       <td>
        <div class="panel-footer"> <button class="btn btn-info" >70% : {{cotizacionSeleccionada.TOTAL*0.7 | currency:"COP $ "}}</button> </div> 
+        <input type="" name="" placeholder="% de pago" ng-model="porcentaje70">
+        <button class="btn btn-warning" ng-click = "agregarPago70()">Agregar pago</button>
 
-       <br>
-        <button class="btn btn-info" ng-click="volver2('medio-pago-70')"> Volver</button>
+        <div ng-repeat="acuerdo in acuerdosPago70">
         <br>
-
-        <div class="list-group"  id="medioPago-70">
-          <a href="#" class="list-group-item" ng-repeat="medioPago in mediosPago" ng-click="selecionarMedioPago(medioPago,cotizacionSeleccionada.TOTAL*0.7,70)">{{medioPago.MEDIOPAGO}}</a>
+        <button class="btn btn-info" ng-click="volver2('medio-pago',porcentajePrincipal,$index)"> Volver</button>
+        <br>
+          <span>Porcentaje: {{acuerdo.porcentaje}}%</span>
+          <br>
+          <span>Valor: {{acuerdo.valor | currency:"COP $ "}}</span>
+        <div ng-init="porcentajePrincipal=70"></div>
+        <medios-pago id="medios-70-{{$index}}"></medios-pago>
+        <bancos-aliados style="display: none" id="bancos-70-{{$index}}"></bancos-aliados>
+        <button class="btn btn-danger" ng-click="elminarAcuerdo(acuerdo,porcentajePrincipal)">Eliminar</button>
         </div>
-
-        <div class="col-md-4" style="display: none" id="bancos-aliados-70">
-        <table class="table table-hover">
-          <th ng-repeat="(key,val) in bancosAliados[0]">{{key}}</th>
-          <tr  ng-repeat ="bancoAliado in bancosAliados" ng-click="seleccionarBanco(bancoAliado,cotizacionSeleccionada.TOTAL*0.7)">
-            <td ng-repeat ="detalle in bancoAliado">{{detalle}}</td>
-          </tr>
-          </table>
-        </div>
-
+        <br>
+        <button ng-click="registrarAcuerdos()" class="btn btn-primary">Aceptar</button>
      </td>
+     <!-- pagos 70 -->
     </tr>    
     </table>
   </div>   
