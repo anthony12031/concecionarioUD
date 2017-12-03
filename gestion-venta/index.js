@@ -1,6 +1,7 @@
 var express = require('express')
 var router = express.Router();
 var dao = require('../dao');
+var shortid = require('shortid');
 
 var email = require('../email');
 
@@ -15,6 +16,58 @@ router.post('/email',function(req,res){
 	console.log(datos);
 	email(datos);
 	res.send("solicitud enviada");
+})
+
+router.post('/acuerdos',function(req,res){
+	var acuerdos = req.body;
+	console.log(acuerdos);
+	var acuerdos30 = acuerdos['30'];
+	var acuerdos70 = acuerdos['70'];
+	var cotizacion= acuerdos.cotizacion;
+	var empleado = acuerdos.empleado;
+
+	var haySolicitudCredito = false;
+
+	for(var key in acuerdos30){
+		var acuerdo = acuerdos30[key];
+		var idAcuerdo = shortid.generate();
+		if(acuerdo.medioPago.IDMEDIOPAGO == 502){
+			haySolicitudCredito = true;
+		}
+		var sql = "INSERT INTO acuerdoPago (idCotizacion,idAcuerdo,idMedioPago,valor) "+
+		"VALUES(:idCotizacion,:idAcuerdo,:idMedioPago,:valor)";
+		dao.open(sql,[cotizacion.COTIZACION,idAcuerdo,acuerdo.medioPago.IDMEDIOPAGO,acuerdo.valor],true,null);
+	}
+	for(var key in acuerdos70){
+		var acuerdo = acuerdos70[key];
+		var idDetalleCotizacion = shortid.generate();
+		var idAcuerdo = shortid.generate();
+		if(acuerdo.medioPago.IDMEDIOPAGO == 502){
+			haySolicitudCredito = true;
+		}
+		var sql = "INSERT INTO acuerdoPago (idCotizacion,idAcuerdo,idMedioPago,valor) "+
+		"VALUES(:idCotizacion,:idAcuerdo,:idMedioPago,:valor)";
+		dao.open(sql,[cotizacion.COTIZACION,idAcuerdo,acuerdo.medioPago.IDMEDIOPAGO,acuerdo.valor],true,null);
+	}
+	console.log("hay Solicitud de credito ?: "+haySolicitudCredito);
+	var idAcuerdoPago= 3;
+	var idEstudioCredito= 2;
+	var idProceso = shortid.generate();
+	//insertar registro en proceso
+	if(haySolicitudCredito){
+		console.log("hay solicitud de credito");
+		var sql = "INSERT INTO proceso(idProceso,idEmpleado,idCotizacion,idTipoProceso,fecha) "+
+		"VALUES (:idProceso,:idEmpleado,:idCotizacion,:idTipoProceso,sysdate)";
+		dao.open(sql,[idProceso,empleado.idEmpleado,cotizacion.COTIZACION,idEstudioCredito],true,null);
+	}
+	else{
+		console.log("NO hay solicitud de credito");
+		var sql = "INSERT INTO proceso(idProceso,idEmpleado,idCotizacion,idTipoProceso,fecha) "+
+		"VALUES (:idProceso,:idEmpleado,:idCotizacion,:idTipoProceso,sysdate)";
+		dao.open(sql,[idProceso,empleado.idEmpleado,cotizacion.COTIZACION,idAcuerdoPago],true,null);
+	}
+	
+	res.send("acuerdos");
 })
 
 router.get('/cotizacion/:idcotizacion',function(req,res){

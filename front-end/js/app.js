@@ -296,6 +296,17 @@ app.factory("Dao",['$http',function($http){
 			})
 	}
 
+	function registrarAcuerdos(acuerdos,callback){
+		hacerPeticion('POST','/acuerdos/',acuerdos)
+		.then(function(res){
+				callback (null,res.data);
+			})
+			//ocurrio algun error
+			.catch(function(err){
+				callback(err,null);
+			})
+	}
+
 	return{
 		getClientes:getClientes,
 		insertarCliente:insertarCliente,
@@ -312,7 +323,8 @@ app.factory("Dao",['$http',function($http){
 		buscarCotizacionPorCedula:buscarCotizacionPorCedula,
 		getMediosPago:getMediosPago,
 		getBancosAliados:getBancosAliados,
-		enviarCorreo:enviarCorreo
+		enviarCorreo:enviarCorreo,
+		registrarAcuerdos:registrarAcuerdos
 	}
 }])
 
@@ -609,6 +621,30 @@ app.controller('controladorVentas',['$scope','Dao',function($scope,Dao){
 		for(var key in $scope.acuerdosPago70){
 			total70 += parseFloat($scope.acuerdosPago70[key].porcentaje);
 		}
+
+		if(total30 != 30 || total70 != 70){
+			alert("los valores no suman al total");
+			return;
+		}
+		empleado = {
+			idEmpleado:11111
+		}
+		var acuerdos = {
+			cotizacion:$scope.cotizacionSeleccionada,
+			'30':$scope.acuerdosPago30,
+			'70':$scope.acuerdosPago70,
+			empleado:empleado
+		};
+		Dao.registrarAcuerdos(acuerdos,function(err,result){
+			if(err)
+				alert("error verifique los datos");	
+			else
+				alert("acuerdos de pago almacenados");
+			console.log(err);
+			console.log(result);
+
+		})
+
 		console.log("total30: "+total30);
 		console.log("total70: "+total70);
 	}

@@ -88,6 +88,7 @@ INSERT INTO medioPago (idMedioPago,detalle) VALUES (505,'Credito Tarjeta');
 INSERT INTO medioPago (idMedioPago,detalle) VALUES (507,'Efectivo Tarjeta');
 INSERT INTO medioPago (idMedioPago,detalle) VALUES (508,'Efectivo');
 INSERT INTO tipoProceso(idTipoProceso,nombre) VALUES (1,'cotizacion');
-
-
-
+INSERT INTO tipoProceso(idTipoProceso,nombre) VALUES (2,'Estudio Credito');
+INSERT INTO tipoProceso(idTipoProceso,nombre) VALUES (3,'Acuerdo Pago');
+INSERT INTO tipoProceso(idTipoProceso,nombre) VALUES (4,'Credito Aprobado');
+INSERT INTO tipoProceso(idTipoProceso,nombre) VALUES (5,'Acuerdo Pago Credito');

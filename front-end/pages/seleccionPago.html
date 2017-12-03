@@ -23,10 +23,15 @@
         <br>
           <span>Porcentaje: {{acuerdo.porcentaje}}%</span>
           <br>
-          <span>Valor: {{acuerdo.valor | currency:"COP $ "}}</span>
+          <span>Valor: {{acuerdo.valor }}</span>
           <div ng-init="porcentajePrincipal=30"></div>
         <medios-pago id="medios-30-{{$index}}"></medios-pago>
         <bancos-aliados style="display: none" id="bancos-30-{{$index}}"></bancos-aliados>
+        <div>
+             <label class="label label-success">Medio de Pago seleccionado: {{acuerdo.medioPago.MEDIOPAGO}}</label>
+
+        </div>
+        <br><br>
         <button class="btn btn-danger" ng-click="elminarAcuerdo(acuerdo,porcentajePrincipal)">Eliminar</button>
         </div>
         <br>
@@ -45,10 +50,15 @@
         <br>
           <span>Porcentaje: {{acuerdo.porcentaje}}%</span>
           <br>
-          <span>Valor: {{acuerdo.valor | currency:"COP $ "}}</span>
+          <span>Valor: {{acuerdo.valor }}</span>
         <div ng-init="porcentajePrincipal=70"></div>
         <medios-pago id="medios-70-{{$index}}"></medios-pago>
         <bancos-aliados style="display: none" id="bancos-70-{{$index}}"></bancos-aliados>
+        <div>
+             <label class="label label-success">Medio de Pago seleccionado: {{acuerdo.medioPago.MEDIOPAGO}}</label>
+
+        </div>
+        <br><br>
         <button class="btn btn-danger" ng-click="elminarAcuerdo(acuerdo,porcentajePrincipal)">Eliminar</button>
         </div>
         <br>
