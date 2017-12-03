@@ -6,9 +6,9 @@ var shortid = require('shortid');
 var email = require('../email');
 
 router.get('/cotizacion',function(req,res){
-	sql = "SELECT C.idcotizacion cotizacion, C.cedula,C.total,P.idProceso,TP.nombre estado  FROM "+
-	"cotizacion C , proceso P,tipoProceso TP  WHERE C.fecha > sysdate-30 AND "+
-	"P.idCotizacion = C.idCotizacion AND P.idTipoProceso = 1 AND TP.idTipoProceso = P.idTipoProceso";
+	sql = "SELECT C.idcotizacion cotizacion, C.cedula,C.total,P.idProceso,TP.nombre estado,to_char(C.fecha,'dd-mm-yy-hh-mi-ss') fecha FROM "+
+	"cotizacion C , proceso P,tipoProceso TP ,(SELECT MAX(P.fecha) fecha FROM proceso P,cotizacion C WHERE P.idCotizacion = C.idCotizacion) reciente WHERE C.fecha > sysdate-30 AND "+
+	"P.idCotizacion = C.idCotizacion AND P.idTipoProceso = 1 AND TP.idTipoProceso = P.idTipoProceso AND P.fecha = reciente.fecha";
 	dao.open(sql,[],false,res);
 })
 
@@ -58,19 +58,19 @@ router.post('/acuerdos',function(req,res){
 	//insertar registro en proceso
 	if(haySolicitudCredito){
 		console.log("hay solicitud de credito");
-		var sql = "UPDATE proceso SET idTipoProceso = :idProceso WHERE idProceso=:idProceso";
-		dao.open(sql,[idEstudioCredito,cotizacion.IDPROCESO],true,null);
-		//	var sql = "INSERT INTO proceso(idProceso,idEmpleado,idCotizacion,idTipoProceso,fecha) "+
-		//"VALUES (:idProceso,:idEmpleado,:idCotizacion,:idTipoProceso,sysdate)";
-		//dao.open(sql,[idProceso,empleado.idEmpleado,cotizacion.COTIZACION,idEstudioCredito],true,null);
+		//var sql = "UPDATE proceso SET idTipoProceso = :idProceso WHERE idProceso=:idProceso";
+		//dao.open(sql,[idEstudioCredito,cotizacion.IDPROCESO],true,null);
+			var sql = "INSERT INTO proceso(idProceso,idEmpleado,idCotizacion,idTipoProceso,fecha) "+
+		"VALUES (:idProceso,:idEmpleado,:idCotizacion,:idTipoProceso,sysdate)";
+		dao.open(sql,[idProceso,empleado.idEmpleado,cotizacion.COTIZACION,idEstudioCredito],true,null);
 	}
 	else{
 		console.log("NO hay solicitud de credito");
 		var sql = "UPDATE proceso SET idTipoProceso = :idProceso WHERE idProceso=:idProceso";
 		dao.open(sql,[idAcuerdoPago,cotizacion.IDPROCESO],true,null);
-		//var sql = "INSERT INTO proceso(idProceso,idEmpleado,idCotizacion,idTipoProceso,fecha) "+
-		//"VALUES (:idProceso,:idEmpleado,:idCotizacion,:idTipoProceso,sysdate)";
-		//dao.open(sql,[idProceso,empleado.idEmpleado,cotizacion.COTIZACION,idAcuerdoPago],true,null);
+		var sql = "INSERT INTO proceso(idProceso,idEmpleado,idCotizacion,idTipoProceso,fecha) "+
+		"VALUES (:idProceso,:idEmpleado,:idCotizacion,:idTipoProceso,sysdate)";
+		dao.open(sql,[idProceso,empleado.idEmpleado,cotizacion.COTIZACION,idAcuerdoPago],true,null);
 	}
 	
 	res.send("acuerdos");
@@ -89,7 +89,7 @@ router.get('/cotizaciones/cliente/:cedula',function(req,res){
 	var cedula = req.params.cedula;
 	console.log(cedula);
 	sql = "SELECT C.idCotizacion cotizacion,C.total,TP.nombre estado,C.fecha from tipoProceso TP,proceso P, "+
-	"cotizacion C WHERE C.fecha > sysdate-30 AND P.idCotizacion = C.idCotizacion AND TP.idTipoProceso = P.idTipoProceso "+
+	"cotizacion C,(SELECT MAX(P.fecha) fecha FROM proceso P,cotizacion C WHERE P.idCotizacion = C.idCotizacion) reciente WHERE P.fecha = reciente.fecha AND C.fecha > sysdate-30 AND P.idCotizacion = C.idCotizacion AND TP.idTipoProceso= 1 AND TP.idTipoProceso = P.idTipoProceso "+
 	"AND C.cedula= "+cedula;
 	dao.open(sql,[],false,res);
 })
@@ -108,8 +108,8 @@ router.get('/cotizaciones/separarAuto/cliente/:cedula',function(req,res){
 	var cedula = req.params.cedula;
 	var idAcuerdoPago = 3;
 	var idAcuerdoPagoCredito = 5;
-	var sql = "SELECT C.idCotizacion idCotizacion,TP.nombre estado,C.cedula cliente,C.total total FROM cotizacion C,proceso P,tipoProceso TP WHERE "+
-	"P.idCotizacion = C.idCotizacion AND TP.idTipoProceso = P.idTipoProceso AND (TP.idTipoProceso = 3 OR TP.idTipoProceso = 4) AND "+
+	var sql = "SELECT C.idCotizacion idCotizacion,TP.nombre estado,C.cedula cliente,C.total total FROM  cotizacion C,proceso P,tipoProceso TP, (SELECT MAX(P.fecha) fecha FROM proceso P,cotizacion C WHERE P.idCotizacion = C.idCotizacion) reciente WHERE "+
+	"P.idCotizacion = C.idCotizacion AND TP.idTipoProceso = P.idTipoProceso AND (TP.idTipoProceso = 3 OR TP.idTipoProceso = 4) AND P.fecha = reciente.fecha AND "+
 	"C.cedula="+cedula;
 	dao.open(sql,[],false,res);
 })
