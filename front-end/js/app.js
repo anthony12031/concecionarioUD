@@ -803,7 +803,6 @@ app.controller('controladorVentas',['$scope','Dao',function($scope,Dao){
 				alert("error verifique los datos");	
 			else
 				alert("acuerdos de pago almacenados");
-			console.log(err);
 			console.log(result);
 
 		})
@@ -995,6 +994,7 @@ app.controller('controladorCredito',['$scope','Dao',function($scope,Dao){
 		Dao.modificarEstado(cot,function(err,result){
 			
 			console.log(result);
+			alert("Estado modificado");
 		})
 	}
 	$scope.volver3 = function(menu,porcentaje,index){

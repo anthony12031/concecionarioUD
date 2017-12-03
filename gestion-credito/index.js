@@ -5,7 +5,8 @@ var dao = require('../dao');
 var email = require('../email');
 
 router.get('/cotizacionCredito',function(req,res){
-	sql = "SELECT C.idcotizacion cotizacion, C.cedula,C.total  FROM cotizacion C, proceso P WHERE C.idCotizacion = P.idcotizacion AND P.idTipoProceso = 2"; //2 = Estudio credito
+	sql = "SELECT C.idcotizacion cotizacion,TP.nombre estado, C.cedula,C.total  FROM cotizacion C, proceso P,tipoproceso TP WHERE "+
+	"TP.idTipoProceso = P.idTipoProceso AND	 C.idCotizacion = P.idcotizacion AND P.idTipoProceso = 2"; //2 = Estudio credito
 	dao.open(sql,[],false,res);
 })
 
@@ -14,7 +15,7 @@ router.get('/cotizacionCredito/:idcotizacion',function(req,res){
 	console.log(cotizacion);	
 	sql = "SELECT P.idProceso Proceso, C.idcotizacion idCotizacion, CL.cedula cedula, E.nombre empleado,C.total, TO_CHAR(P.fecha,'dd/mm/yyyy') fecha_Proceso "+
 	 "FROM cotizacion C, cliente CL, empleado E, proceso P, tipoproceso TP WHERE P.idempleado = E.idempleado AND "+
-	 "CL.cedula = C.cedula  AND C.idcotizacion ='"+cotizacion+"' AND P.idcotizacion = C.idcotizacion AND P.idTipoProceso = TP.idTipoProceso";
+	 "CL.cedula = C.cedula  AND C.idcotizacion ='"+cotizacion+"' AND P.idcotizacion = C.idcotizacion AND P.idTipoProceso = TP.idTipoProceso AND TP.idTipoProceso=2";
 	dao.open(sql,[],false,res);
 })
 

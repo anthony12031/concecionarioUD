@@ -6,7 +6,7 @@ var shortid = require('shortid');
 var email = require('../email');
 
 router.get('/cotizacion',function(req,res){
-	sql = "SELECT C.idcotizacion cotizacion, C.cedula,C.total,TP.nombre estado  FROM "+
+	sql = "SELECT C.idcotizacion cotizacion, C.cedula,C.total,P.idProceso,TP.nombre estado  FROM "+
 	"cotizacion C , proceso P,tipoProceso TP  WHERE C.fecha > sysdate-30 AND "+
 	"P.idCotizacion = C.idCotizacion AND P.idTipoProceso = 1 AND TP.idTipoProceso = P.idTipoProceso";
 	dao.open(sql,[],false,res);
@@ -58,18 +58,19 @@ router.post('/acuerdos',function(req,res){
 	//insertar registro en proceso
 	if(haySolicitudCredito){
 		console.log("hay solicitud de credito");
-		//var sql = "UPDATE proceso SET idTipoProceso = :idProceso WHERE idCotizacion=:idCotizacion AND idProceso= "+
-		//"(SELECT idProceso from proceso)"
-		//dao.open(sql,[idEstudioCredito,cotizacion.COTIZACION],true,null);
-		var sql = "INSERT INTO proceso(idProceso,idEmpleado,idCotizacion,idTipoProceso,fecha) "+
-		"VALUES (:idProceso,:idEmpleado,:idCotizacion,:idTipoProceso,sysdate)";
-		dao.open(sql,[idProceso,empleado.idEmpleado,cotizacion.COTIZACION,idEstudioCredito],true,null);
+		var sql = "UPDATE proceso SET idTipoProceso = :idProceso WHERE idProceso=:idProceso";
+		dao.open(sql,[idEstudioCredito,cotizacion.IDPROCESO],true,null);
+		//	var sql = "INSERT INTO proceso(idProceso,idEmpleado,idCotizacion,idTipoProceso,fecha) "+
+		//"VALUES (:idProceso,:idEmpleado,:idCotizacion,:idTipoProceso,sysdate)";
+		//dao.open(sql,[idProceso,empleado.idEmpleado,cotizacion.COTIZACION,idEstudioCredito],true,null);
 	}
 	else{
 		console.log("NO hay solicitud de credito");
-		var sql = "INSERT INTO proceso(idProceso,idEmpleado,idCotizacion,idTipoProceso,fecha) "+
-		"VALUES (:idProceso,:idEmpleado,:idCotizacion,:idTipoProceso,sysdate)";
-		dao.open(sql,[idProceso,empleado.idEmpleado,cotizacion.COTIZACION,idAcuerdoPago],true,null);
+		var sql = "UPDATE proceso SET idTipoProceso = :idProceso WHERE idProceso=:idProceso";
+		dao.open(sql,[idAcuerdoPago,cotizacion.IDPROCESO],true,null);
+		//var sql = "INSERT INTO proceso(idProceso,idEmpleado,idCotizacion,idTipoProceso,fecha) "+
+		//"VALUES (:idProceso,:idEmpleado,:idCotizacion,:idTipoProceso,sysdate)";
+		//dao.open(sql,[idProceso,empleado.idEmpleado,cotizacion.COTIZACION,idAcuerdoPago],true,null);
 	}
 	
 	res.send("acuerdos");
@@ -108,7 +109,7 @@ router.get('/cotizaciones/separarAuto/cliente/:cedula',function(req,res){
 	var idAcuerdoPago = 3;
 	var idAcuerdoPagoCredito = 5;
 	var sql = "SELECT C.idCotizacion idCotizacion,TP.nombre estado,C.cedula cliente,C.total total FROM cotizacion C,proceso P,tipoProceso TP WHERE "+
-	"P.idCotizacion = C.idCotizacion AND TP.idTipoProceso = P.idTipoProceso AND (TP.idTipoProceso = 3 OR TP.idTipoProceso = 5) AND "+
+	"P.idCotizacion = C.idCotizacion AND TP.idTipoProceso = P.idTipoProceso AND (TP.idTipoProceso = 3 OR TP.idTipoProceso = 4) AND "+
 	"C.cedula="+cedula;
 	dao.open(sql,[],false,res);
 })
