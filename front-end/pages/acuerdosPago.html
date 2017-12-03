@@ -1,0 +1,16 @@
+<h4>Acuerdos de pago correspondiendes al 30%</h4>
+<div class="panel-body" >
+    <table class="table table-hover">
+    <th ng-repeat="(key, value) in acuerdosPago[0]">{{key}}</th>
+    <th>Cancelado</th>
+    <tr class="rowCotizacion" ng-repeat ="acuerdo in acuerdosPago">
+       <td ng-repeat ="detalle in acuerdo">{{detalle}}</td>
+       <td>
+       	<input class="form-check-input" type="checkbox" value="" ng-model="acuerdo.CANCELADO">
+       </td>
+    </tr>
+    </table>
+    <br>
+    <button class="btn btn-warning" ng-click="modificarAcuerdos()">Guardar</button>
+    <br>
+  </div> 

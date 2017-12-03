@@ -14,6 +14,9 @@ app.config(function($routeProvider,$locationProvider) {
     .when("/estudioCredito",{
     	templateUrl:"pages/estudioCredito.html"
     })
+    .when("/separarAuto",{
+    	templateUrl:"pages/separarAuto.html"
+    })
         // use the HTML5 History API
         $locationProvider.html5Mode(true);
 });
@@ -88,6 +91,18 @@ app.directive('bancosAliados',[function(){
 app.directive('mediosPago',[function(){
 	return {
 		templateUrl:'pages/mediosPago.html'
+	}
+}])
+
+app.directive('separarAutoSeleccionCotizacion',[function(){
+	return {
+		templateUrl:'pages/separarAutoSeleccionCotizacion.html'
+	}
+}])
+
+app.directive('acuerdosPago',[function(){
+	return {
+		templateUrl:'pages/acuerdosPago.html'
 	}
 }])
 
@@ -307,6 +322,39 @@ app.factory("Dao",['$http',function($http){
 			})
 	}
 
+	function buscarCotizacionPorCedulaSepararAuto(cedula,callback){
+		hacerPeticion('GET','/cotizaciones/separarAuto/cliente/'+cedula)
+		.then(function(res){
+				callback (null,res.data);
+			})
+			//ocurrio algun error
+			.catch(function(err){
+				callback(err,null);
+			})
+	}
+
+	function getAcuerdosPago(cotizacion,callback){
+		hacerPeticion('GET','/acuerdosPago/'+cotizacion.IDCOTIZACION)
+		.then(function(res){
+				callback (null,res.data);
+			})
+			//ocurrio algun error
+			.catch(function(err){
+				callback(err,null);
+			})
+	}
+
+	function modificarAcuerdos(acuerdos,callback){
+		hacerPeticion('POST','/acuerdos/modificar',acuerdos)
+		.then(function(res){
+				callback (null,res.data);
+			})
+			//ocurrio algun error
+			.catch(function(err){
+				callback(err,null);
+			})		
+	}
+
 	return{
 		getClientes:getClientes,
 		insertarCliente:insertarCliente,
@@ -324,7 +372,10 @@ app.factory("Dao",['$http',function($http){
 		getMediosPago:getMediosPago,
 		getBancosAliados:getBancosAliados,
 		enviarCorreo:enviarCorreo,
-		registrarAcuerdos:registrarAcuerdos
+		registrarAcuerdos:registrarAcuerdos,
+		buscarCotizacionPorCedulaSepararAuto:buscarCotizacionPorCedulaSepararAuto,
+		getAcuerdosPago:getAcuerdosPago,
+		modificarAcuerdos:modificarAcuerdos
 	}
 }])
 
@@ -534,6 +585,36 @@ app.controller('controladorVentas',['$scope','Dao',function($scope,Dao){
 			$scope.cotizaciones = result;
 			console.log(result);
 	});
+
+	$scope.buscarCotizacionPorCedulaSepararAuto = function(cedula){
+		Dao.buscarCotizacionPorCedulaSepararAuto(cedula,function(err,result){
+			console.log(result);
+			$scope.cotizacionesSepararAuto = result;
+		})
+	}
+
+	$scope.seleccionarCotizacionSepararAuto = function(cotizacion){
+		console.log(cotizacion);
+		Dao.getAcuerdosPago(cotizacion,function(err,result){
+			console.log(result);
+			$scope.acuerdosPago = result;
+			$scope.cotizacionSeleccionada = cotizacion;
+		})
+	}
+
+	$scope.modificarAcuerdos = function(){
+		console.log("modificar acuerdos");
+		console.log($scope.acuerdosPago);
+		var datos = {
+			acuerdos:$scope.acuerdosPago,
+			idEmpleado:11111,
+			idCotizacion:$scope.cotizacionSeleccionada.IDCOTIZACION
+		}
+		Dao.modificarAcuerdos(datos,function(err,result){
+			console.log(result);
+			alert("Cambios efectuados");
+		})
+	}
 
 	$scope.acuerdosPago30 = {};
 	var index30 = 0;
