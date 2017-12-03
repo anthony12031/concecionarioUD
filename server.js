@@ -13,6 +13,8 @@ var gestionCotizacion = require('./gestion-cotizacion');
 app.use(gestionCotizacion);
 var gestionVenta = require('./gestion-venta');
 app.use(gestionVenta);
+var gestionCredito = require('./gestion-credito');
+app.use(gestionCredito);
 
 
 app.get('*', function (req, res) {
