@@ -412,7 +412,7 @@ app.factory("Dao",['$http',function($http){
 
 	function modificarAcuerdos(acuerdos,callback){
 		hacerPeticion('POST','/acuerdos/modificar',acuerdos)
-		then(function(res){
+		.then(function(res){
 				callback (null,res.data);
 			})
 			//ocurrio algun error
