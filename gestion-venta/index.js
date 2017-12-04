@@ -119,9 +119,9 @@ router.get('/acuerdosPago/:idCotizacion',function(req,res){
 	var idCotizacion = req.params.idCotizacion;
 
 	//selecionar acuerdos de pago del 30% que no han sido pagados
-	var sql = "SELECT A.idCotizacion, A.idAcuerdo,A.idMedioPago,MP.detalle medioPago FROM acuerdoPago A,medioPago MP "+
+	var sql = "SELECT A.idCotizacion, A.idAcuerdo,A.idMedioPago,MP.detalle medioPago,A.valor FROM acuerdoPago A,medioPago MP "+
 	"WHERE A.porcentaje = 30 AND MP.idMedioPago= A.idMedioPago AND A.idCotizacion ='"+idCotizacion+"' MINUS "+
-	"(SELECT A.idCotizacion, A.idAcuerdo,A.idMedioPago, MP.detalle medioPago FROM detalleFactura DF,acuerdoPago A, medioPago MP "+
+	"(SELECT A.idCotizacion, A.idAcuerdo,A.idMedioPago, MP.detalle medioPago,A.valor FROM detalleFactura DF,acuerdoPago A, medioPago MP "+
 	"WHERE A.idAcuerdo = DF.idAcuerdo AND MP.idMedioPago = A.idMedioPago AND A.idCotizacion = '"+idCotizacion+"')";
 
 	dao.open(sql,[],false,res,function(results){
@@ -149,10 +149,10 @@ router.post('/acuerdos/modificar',function(req,res){
 		}
 	})
 	});
-
+	
 	res.send({
 		idFactura:idFactura
-	});
+		});
 })
 
 router.get('/cliente/detalles/:cedula',function(req,res){
@@ -170,15 +170,29 @@ router.get('/empleado/detalles/:idEmpleado',function(req,res){
 })
 
 router.post('/separarAuto',function(req,res){
-	console.log("separar auto");
+	console.log("----separar auto--------");
 	var cotizacion = req.body;
 	var idProceso = shortid.generate();
-	console.log("---cotizacion----");
-	console.log(cotizacion);
-	var sql = "INSERT INTO proceso (idProceso,idCotizacion,idEmpleado,idTipoProceso,fecha) VALUES "+
-	"(:idProceso,:idCotizacion,:idEmpleado,:idTipoProceso,sysdate)";
-	dao.open(sql,[idProceso,cotizacion.IDCOTIZACION,cotizacion.IDEMPLEADO,6],true,null);
-	res.send("proceso acuerdo de pago");
+	//selecionar acuerdos de pago del 30% que no han sido pagados
+	// si todos estan cancelados insertar proceso auto separado
+	var sql = "SELECT A.idCotizacion, A.idAcuerdo,A.idMedioPago,MP.detalle medioPago,A.valor FROM acuerdoPago A,medioPago MP "+
+	"WHERE A.porcentaje = 30 AND MP.idMedioPago= A.idMedioPago AND A.idCotizacion ='"+cotizacion.IDCOTIZACION+"' MINUS "+
+	"(SELECT A.idCotizacion, A.idAcuerdo,A.idMedioPago, MP.detalle medioPago,A.valor FROM detalleFactura DF,acuerdoPago A, medioPago MP "+
+	"WHERE A.idAcuerdo = DF.idAcuerdo AND MP.idMedioPago = A.idMedioPago AND A.idCotizacion = '"+cotizacion.IDCOTIZACION+"')";
+
+	dao.open(sql,[],false,null,function(results){
+		console.log("pagos del 30% faltantes");
+		console.log(results.rows.length);
+		var separarAuto = results.rows.length == 0 ? true:false;
+		if(separarAuto){
+			var sql = "INSERT INTO proceso (idProceso,idCotizacion,idEmpleado,idTipoProceso,fecha) VALUES "+
+			"(:idProceso,:idCotizacion,:idEmpleado,:idTipoProceso,sysdate)";
+			dao.open(sql,[idProceso,cotizacion.IDCOTIZACION,cotizacion.IDEMPLEADO,6],true,null);
+		}
+		res.send({
+		autoSeparado:separarAuto
+		});
+	});
 })
 
 module.exports = router;

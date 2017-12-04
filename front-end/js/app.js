@@ -740,6 +740,7 @@ app.controller('controladorVentas',['$scope','Dao',function($scope,Dao){
 		Dao.modificarAcuerdos(datos,function(err,result){
 			//console.log(result);
 			$scope.factura = result;
+			console.log(result);
 			//alert("Cambios efectuados");
 			//console.log($scope.cotizacionSeleccionada)
 			Dao.getDetallesCliente($scope.cotizacionSeleccionada.CLIENTE,function(err,clientes){
@@ -759,11 +760,16 @@ app.controller('controladorVentas',['$scope','Dao',function($scope,Dao){
 					idFactura:$scope.factura.idFactura,
 					acuerdosCancelados:acuerdosCancelados
 					})
+
+
 	             })
 	             //agregar estado separar auto
 	             Dao.estadoSepararAuto($scope.cotizacionSeleccionada,function(err,result){
 	             	console.log(result);
-	             	alert("estado modificado");
+	             	if(result.autoSeparado){
+	             		alert ("el auto ha sido separado");
+	             	}
+	             	//alert("estado modificado");
 	             })
 			})
 			
@@ -776,7 +782,7 @@ app.controller('controladorVentas',['$scope','Dao',function($scope,Dao){
 
 	function facturaPDF(datos){
 	
-		var datosAcuerdos = [["MEDIO DE PAGO","VALOR"]];
+		var datosAcuerdos = [["medioPago","valor"]];
 		datos.acuerdosCancelados.forEach(function(acuerdo){
 			var detalles = [];
 			detalles.push(acuerdo.MEDIOPAGO)
@@ -787,6 +793,8 @@ app.controller('controladorVentas',['$scope','Dao',function($scope,Dao){
 		if(datosAcuerdos.length <2){
 			return;
 		}
+
+		console.log(datosAcuerdos);
 
 	var docDefinition = {
 	   content: [
