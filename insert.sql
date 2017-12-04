@@ -93,3 +93,4 @@ INSERT INTO tipoProceso(idTipoProceso,nombre) VALUES (3,'Acuerdo Pago');
 INSERT INTO tipoProceso(idTipoProceso,nombre) VALUES (4,'Credito Aprobado');
 INSERT INTO tipoProceso(idTipoProceso,nombre) VALUES (5,'Acuerdo Pago Credito');
 INSERT INTO tipoFactura(idTipoFactura,nombreTipoFactura) VALUES (1,'Factura Automovil');
+INSERT INTO tipoproceso (idtipoproceso,nombre) VALUES (6,'Auto Separado');

@@ -108,17 +108,25 @@ router.get('/cotizaciones/separarAuto/cliente/:cedula',function(req,res){
 	var cedula = req.params.cedula;
 	var idAcuerdoPago = 3;
 	var idAcuerdoPagoCredito = 5;
-	var sql = "SELECT C.idCotizacion idCotizacion,TP.nombre estado,C.cedula cliente,C.total total FROM  cotizacion C,proceso P,tipoProceso TP, (SELECT MAX(P.fecha) fecha FROM proceso P,cotizacion C WHERE P.idCotizacion = C.idCotizacion) reciente WHERE "+
+	var sql = "SELECT C.idCotizacion idCotizacion,C.idEmpleado,TP.nombre estado,C.cedula cliente,C.total total FROM  cotizacion C,proceso P,tipoProceso TP, (SELECT MAX(P.fecha) fecha FROM proceso P,cotizacion C WHERE P.idCotizacion = C.idCotizacion) reciente WHERE "+
 	"P.idCotizacion = C.idCotizacion AND TP.idTipoProceso = P.idTipoProceso AND (TP.idTipoProceso = 3 OR TP.idTipoProceso = 4) AND P.fecha = reciente.fecha AND "+
 	"C.cedula="+cedula;
 	dao.open(sql,[],false,res);
 })
 
+
 router.get('/acuerdosPago/:idCotizacion',function(req,res){
 	var idCotizacion = req.params.idCotizacion;
-	var sql = "SELECT A.idCotizacion, A.idAcuerdo, A.idMedioPago,MP.detalle medioPago,A.valor FROM acuerdoPago A,medioPago MP WHERE MP.idMedioPago = A.idMedioPago AND porcentaje = 30 AND idCotizacion = '"
-	+idCotizacion+"'"; 
-	dao.open(sql,[],false,res);
+
+	//selecionar acuerdos de pago del 30% que no han sido pagados
+	var sql = "SELECT A.idCotizacion, A.idAcuerdo,A.idMedioPago,MP.detalle medioPago FROM acuerdoPago A,medioPago MP "+
+	"WHERE A.porcentaje = 30 AND MP.idMedioPago= A.idMedioPago AND A.idCotizacion ='"+idCotizacion+"' MINUS "+
+	"(SELECT A.idCotizacion, A.idAcuerdo,A.idMedioPago, MP.detalle medioPago FROM detalleFactura DF,acuerdoPago A, medioPago MP "+
+	"WHERE A.idAcuerdo = DF.idAcuerdo AND MP.idMedioPago = A.idMedioPago AND A.idCotizacion = '"+idCotizacion+"')";
+
+	dao.open(sql,[],false,res,function(results){
+		console.log(results.rows);
+	});
 })
 
 router.post('/acuerdos/modificar',function(req,res){
@@ -126,9 +134,8 @@ router.post('/acuerdos/modificar',function(req,res){
 	var idEmpleado = req.body.idEmpleado;
 	var idCotizacion = req.body.idCotizacion;
 	console.log("registrar factura");
-	
-	
 	var idFactura = shortid.generate();
+
 	var sql = "INSERT INTO factura (idFactura,idCotizacion,idEmpleado,idTipoFactura,fecha) "+
 			"VALUES(:idFactura,:idCotizacion,:idEmpleado,:idTipoFactura,sysdate)";
 	
@@ -143,9 +150,35 @@ router.post('/acuerdos/modificar',function(req,res){
 	})
 	});
 
-	
+	res.send({
+		idFactura:idFactura
+	});
+})
 
-	res.send("factura");
+router.get('/cliente/detalles/:cedula',function(req,res){
+	var cedula = req.params.cedula;
+	console.log(cedula);
+	var sql = "SELECT * FROM cliente WHERE cedula = "+cedula;
+	dao.open(sql,[],false,res);
+})
+
+router.get('/empleado/detalles/:idEmpleado',function(req,res){
+	var idEmpleado = req.params.idEmpleado;
+	console.log(idEmpleado)
+	var sql = "SELECT * FROM empleado WHERE idEmpleado = "+idEmpleado;
+	dao.open(sql,[],false,res);
+})
+
+router.post('/separarAuto',function(req,res){
+	console.log("separar auto");
+	var cotizacion = req.body;
+	var idProceso = shortid.generate();
+	console.log("---cotizacion----");
+	console.log(cotizacion);
+	var sql = "INSERT INTO proceso (idProceso,idCotizacion,idEmpleado,idTipoProceso,fecha) VALUES "+
+	"(:idProceso,:idCotizacion,:idEmpleado,:idTipoProceso,sysdate)";
+	dao.open(sql,[idProceso,cotizacion.IDCOTIZACION,cotizacion.IDEMPLEADO,6],true,null);
+	res.send("proceso acuerdo de pago");
 })
 
 module.exports = router;

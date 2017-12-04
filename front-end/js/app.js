@@ -432,7 +432,41 @@ app.factory("Dao",['$http',function($http){
 			})		
 	}
 
+	function getDetallesCliente(cedula,callback){
+		hacerPeticion('GET','/cliente/detalles/'+cedula,null)
+		.then(function(res){
+				callback (null,res.data);
+			})
+			//ocurrio algun error
+			.catch(function(err){
+				//callback(err,null);
+			})	
+	}
+
+	function getDetallesEmpleado(idEmpleado,callback){
+		hacerPeticion('GET','/empleado/detalles/'+idEmpleado,null)
+		.then(function(res){
+				callback (null,res.data);
+			})
+			//ocurrio algun error
+			.catch(function(err){
+				//callback(err,null);
+			})
+	}
+
+	function estadoSepararAuto(cotizacion,callback){
+		hacerPeticion('POST','/separarAuto',cotizacion)
+		.then(function(res){
+				callback (null,res.data);
+			})
+			//ocurrio algun error
+			.catch(function(err){
+				callback(err,null);
+			})	
+	}
+
 	return{
+		estadoSepararAuto:estadoSepararAuto,
 		getClientes:getClientes,
 		insertarCliente:insertarCliente,
 		getDetalleCliente:getDetalleCliente,
@@ -457,7 +491,9 @@ app.factory("Dao",['$http',function($http){
 		getDetalleCotizacionCredito:getDetalleCotizacionCredito,
 		buscarCotizacionCreditoPorCedula:buscarCotizacionCreditoPorCedula,
 		getDetalleCredito:getDetalleCredito,
-		modificarEstado:modificarEstado
+		modificarEstado:modificarEstado,
+		getDetallesCliente:getDetallesCliente,
+		getDetallesEmpleado:getDetallesEmpleado
 	}
 }])
 
@@ -687,15 +723,111 @@ app.controller('controladorVentas',['$scope','Dao',function($scope,Dao){
 	$scope.modificarAcuerdos = function(){
 		console.log("modificar acuerdos");
 		console.log($scope.acuerdosPago);
+
+		var acuerdosCancelados = [];
+		$scope.acuerdosPago.forEach(function(acuerdo){
+			if(acuerdo.CANCELADO){
+				acuerdosCancelados.push(acuerdo);
+			}
+		})
+
 		var datos = {
 			acuerdos:$scope.acuerdosPago,
 			idEmpleado:11111,
 			idCotizacion:$scope.cotizacionSeleccionada.IDCOTIZACION
 		}
+
 		Dao.modificarAcuerdos(datos,function(err,result){
-			console.log(result);
-			alert("Cambios efectuados");
+			//console.log(result);
+			$scope.factura = result;
+			//alert("Cambios efectuados");
+			//console.log($scope.cotizacionSeleccionada)
+			Dao.getDetallesCliente($scope.cotizacionSeleccionada.CLIENTE,function(err,clientes){
+				console.log(clientes);
+	             $scope.cliente = clientes[0];
+	             //console.log($scope.acuerdosPago);	
+	             Dao.getDetallesEmpleado(datos.idEmpleado,function(err,empleados){
+	             	console.log(empleados);
+	             	$scope.empleado = empleados[0];
+	             	
+	             	facturaPDF({
+					cotizacion:$scope.cotizacionSeleccionada.IDCOTIZACIO,
+					cedula:$scope.cotizacionSeleccionada.CEDULA,
+					idEmpleado:datos.idEmpleado,
+					nombreEmpleado:$scope.empleado.NOMBRE+" "+$scope.empleado.APELLIDO,
+					nombreCliente:$scope.cliente.NOMBRE+" "+$scope.cliente.APELLIDO,
+					idFactura:$scope.factura.idFactura,
+					acuerdosCancelados:acuerdosCancelados
+					})
+	             })
+	             //agregar estado separar auto
+	             Dao.estadoSepararAuto($scope.cotizacionSeleccionada,function(err,result){
+	             	console.log(result);
+	             	alert("estado modificado");
+	             })
+			})
+			
 		})
+
+
+	}
+
+	//facturaPDF();
+
+	function facturaPDF(datos){
+	
+		var datosAcuerdos = [["MEDIO DE PAGO","VALOR"]];
+		datos.acuerdosCancelados.forEach(function(acuerdo){
+			var detalles = [];
+			detalles.push(acuerdo.MEDIOPAGO)
+			detalles.push(acuerdo.VALOR)
+			datosAcuerdos.push(detalles);
+		})
+		console.log(datosAcuerdos[0])
+		if(datosAcuerdos.length <2){
+			return;
+		}
+
+	var docDefinition = {
+	   content: [
+	     { text: 'ConcecionarioUD', style: ['header','anotherStyle'] },
+	     { text: 'Factura', style: [ 'subHeader'] },
+	     {text: 'Id Factura: '+datos.idFactura},
+	     {text: 'Fecha: '+moment().format('MMMM Do YYYY, h:mm:ss')},
+	     { text: 'Cliente', style: [ 'subHeader'] },
+	     {text: datos.nombreCliente},
+	     {text: 'Empleado:',style:'subHeader'},
+	     {text: datos.nombreEmpleado},
+	     {text: 'Detalle factura:',style:'subHeader'},
+	    {style:'tabla',table:{
+ 		headerRows: 1,
+        widths: [ 100, 100,100,100],
+        body:datosAcuerdos
+ 		}
+ 	},
+	   ],
+
+	   styles: {
+	   	tabla:{
+ 			margin:[0,10,0,10]
+ 		},
+	   	 subHeader:{
+		   fontSize: 14,
+	       bold: true,
+	       margin:[0,10,0,10]
+	   	 },
+	     header: {
+	       fontSize: 16,
+	       bold: true
+	     },
+	     anotherStyle: {
+	       italic: true,
+	       alignment: 'right'
+	     }
+	   }
+	 };
+ 	// download the PDF
+ 	pdfMake.createPdf(docDefinition).download('Factura.pdf');
 	}
 
 	$scope.acuerdosPago30 = {};
