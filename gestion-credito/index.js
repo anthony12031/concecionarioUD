@@ -54,8 +54,6 @@ router.post('/estado',function(req,res){
 	var idCotizacion = req.body.idCotizacion;
 	var idTipoProceso = 4;
 
-
-
 	sql = "INSERT INTO proceso (idProceso,idempleado,idCotizacion,idTipoProceso,fecha) VALUES (:idProceso,:idEmpleado,:idCotizacion,:idTipoProceso,sysdate)";
 	//true significa autocommit
 	dao.open(sql,[idProceso,idEmpleado,idCotizacion,4],true,null);

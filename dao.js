@@ -45,6 +45,14 @@ function open(sql,binds,dml,rs,callback){
 	})
 }
 
+function getConexion(){
+	return new Promise(function(resolve,reject){
+		oracle.getConnection(auth,function(err,con){
+			return con;
+		});	
+	})
+	
+}
 
 function close(cn){
 	cn.release(function(err){
@@ -56,3 +64,4 @@ function close(cn){
 
 exports.open = open;
 exports.close = close;
+exports.getConexion = getConexion;

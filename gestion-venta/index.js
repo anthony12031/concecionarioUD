@@ -73,6 +73,13 @@ router.post('/acuerdos',function(req,res){
 		dao.open(sql,[idProceso,empleado.idEmpleado,cotizacion.COTIZACION,idAcuerdoPago],true,null);
 	}
 	
+		//hacer commit
+			dao.getConexion()
+				.then(function(con){
+					con.commit();
+					dao.close(con);
+				})
+
 	res.send("acuerdos");
 })
 
@@ -200,6 +207,13 @@ router.post('/acuerdosPago/modificar',function(req,res){
 	})
 	});
 	
+	//hacer commit
+			dao.getConexion()
+				.then(function(con){
+					con.commit();
+					dao.close(con);
+				})
+
 	res.send({
 		idFactura:idFactura
 		});
@@ -243,6 +257,13 @@ router.post('/separarAuto',function(req,res){
 		autoSeparado:separarAuto
 		});
 	});
+
+	//hacer commit
+			dao.getConexion()
+				.then(function(con){
+					con.commit();
+					dao.close(con);
+				})
 })
 
 router.post('/getPagosRestantes',function(req,res){
@@ -269,6 +290,13 @@ router.post('/getPagosRestantes',function(req,res){
 		autoVendido:autoVendido
 		});
 	});
+
+	//hacer commit
+			dao.getConexion()
+				.then(function(con){
+					con.commit();
+					dao.close(con);
+				})
 })
 
 module.exports = router;
