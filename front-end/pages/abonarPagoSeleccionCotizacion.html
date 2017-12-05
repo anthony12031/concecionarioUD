@@ -10,14 +10,14 @@
     <div class="col-xs-6">
       <input class="form-control input-sm" type="" name="" placeholder="cedula" ng-model="cedula">
     </div>
-    <button class="btn btn-info" ng-click="buscarCotizacionPorCedulaSepararAuto(cedula)">Buscar</button>
+    <button class="btn btn-info" ng-click="buscarCotizacionPorCedulaAbonarPago(cedula)">Buscar</button>
     </div>
   </div>
   
   <div class="panel-body" >
     <table class="table table-hover">
-    <th ng-repeat="(key, value) in cotizacionesSepararAuto[0]">{{key}}</th>
-    <tr class="rowCotizacion" ng-repeat ="cotizacion in cotizacionesSepararAuto track by $index" ng-click="seleccionarCotizacionSepararAuto(cotizacion,$event.currentTarget)">
+    <th ng-repeat="(key, value) in cotizacionesAbonarPago[0]">{{key}}</th>
+    <tr class="rowCotizacion" ng-repeat ="cotizacion in cotizacionesAbonarPago track by $index" ng-click="seleccionarCotizacionAbonarPago(cotizacion,$event.currentTarget)">
        <td ng-repeat ="detalle in cotizacion">{{detalle}}</td>
     </tr>
     </table>

@@ -23,9 +23,10 @@ function open(sql,binds,dml,rs,callback){
 		if(error(err,rs,null)==-1) return;
 		con.execute(sql,binds,{autoCommit:dml},function(err,result){
 			if(error(err,rs,con)==-1) return;
-			if(rs)
-				rs.set('Content-Type','application/json').status(200);
+			//if(rs)
+				//rs.set('Content-Type','application/json').status(200);
 			if(dml){
+				//console.log(JSON.stringify(result));
 				if(rs)
 				rs.send(JSON.stringify(result.rowsAffected));
 				if(callback)
@@ -33,7 +34,7 @@ function open(sql,binds,dml,rs,callback){
 			}
 				
 			else{
-				//console.log(JSON.stringify(result.rows));
+				//console.log(JSON.stringify(result));
 				if(rs)
 				rs.send(JSON.stringify(result.rows))
 				if(callback)
