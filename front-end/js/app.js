@@ -421,9 +421,21 @@ app.factory("Dao",['$http',function($http){
 			})	
 	}
 
-	function modificarEstado(idproceso,callback){
-		hacerPeticion('PUT','/estado',{idproceso:idproceso})
+	function obtenerID(idProceso, idCotizacion,callback){	
+		hacerPeticion('GET','/id/'+idProceso+'/'+idCotizacion)
+		.then(function(res){				
+				callback (null,res.data);
+			})
+			//ocurrio algun error
+			.catch(function(err){
+				callback(err,null);
+			})
+	}
+
+	function modificarEstado(idCotizacion,idEmpleado,callback){
+		hacerPeticion('POST','/estado',{idCotizacion:idCotizacion,idEmpleado:idEmpleado})
 		.then(function(res){
+				console.log(res.data);
 				callback (null,res.data);
 			})
 			//ocurrio algun error
@@ -457,7 +469,9 @@ app.factory("Dao",['$http',function($http){
 		getDetalleCotizacionCredito:getDetalleCotizacionCredito,
 		buscarCotizacionCreditoPorCedula:buscarCotizacionCreditoPorCedula,
 		getDetalleCredito:getDetalleCredito,
+		obtenerID:obtenerID,
 		modificarEstado:modificarEstado
+
 	}
 }])
 
@@ -987,15 +1001,18 @@ app.controller('controladorCredito',['$scope','Dao',function($scope,Dao){
 			console.log(result);			
 			$('#detalle-credito').show();
 		})
+		var idEmpleado;			
+		Dao.obtenerID($scope.creditoSeleccionado.PROCESO,$scope.creditoSeleccionado.IDCOTIZACION,function(err,result){				
+			idEmpleado = Number(result[0].IDEMPLEADO);	
+			console.log(idEmpleado);			
+			$scope.idEmpleado = idEmpleado;			
+		})
 	}
 
-	$scope.cambiarEstado = function(cot){
-		
-		Dao.modificarEstado(cot,function(err,result){
-			
-			console.log(result);
-			alert("Estado modificado");
-		})
+	$scope.cambiarEstado = function(proc,cot,id){
+		Dao.modificarEstado(cot,id,function(err,result){
+			alert("Estado Modificado");
+		})		
 	}
 	$scope.volver3 = function(menu,porcentaje,index){
 		if(menu == 'seleccionCotizacionCredito'){
