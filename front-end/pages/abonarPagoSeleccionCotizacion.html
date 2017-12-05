@@ -1,0 +1,25 @@
+
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title"> <strong>Seleccione la Cotización</strong> </h3>
+    <br>
+    <button class="btn btn-info" ng-click="volverTodasCotizaciones()">Volver</button>
+    <br>
+    <br>
+    <div class="row">
+    <div class="col-xs-6">
+      <input class="form-control input-sm" type="" name="" placeholder="cedula" ng-model="cedula">
+    </div>
+    <button class="btn btn-info" ng-click="buscarCotizacionPorCedulaAbonarPago(cedula)">Buscar</button>
+    </div>
+  </div>
+  
+  <div class="panel-body" >
+    <table class="table table-hover">
+    <th ng-repeat="(key, value) in cotizacionesAbonarPago[0]">{{key}}</th>
+    <tr class="rowCotizacion" ng-repeat ="cotizacion in cotizacionesAbonarPago track by $index" ng-click="seleccionarCotizacionAbonarPago(cotizacion,$event.currentTarget)">
+       <td ng-repeat ="detalle in cotizacion">{{detalle}}</td>
+    </tr>
+    </table>
+  </div> 
+</div>

@@ -17,6 +17,9 @@ app.config(function($routeProvider,$locationProvider) {
     .when("/separarAuto",{
     	templateUrl:"pages/separarAuto.html"
     })
+    .when("/abonarPago",{
+    	templateUrl:"pages/abonarPago.html"
+    })
         // use the HTML5 History API
         $locationProvider.html5Mode(true);
 });
@@ -101,9 +104,21 @@ app.directive('separarAutoSeleccionCotizacion',[function(){
 	}
 }])
 
+app.directive('abonarPagoSeleccionCotizacion',[function(){
+	return {
+		templateUrl:'pages/abonarPagoSeleccionCotizacion.html'
+	}
+}])
+
 app.directive('acuerdosPago',[function(){
 	return {
 		templateUrl:'pages/acuerdosPago.html'
+	}
+}]);
+
+app.directive('acuerdosPagoAbonar',[function(){
+	return {
+		templateUrl:'pages/acuerdosPagoAbonar.html'
 	}
 }]);
 
@@ -375,6 +390,19 @@ app.factory("Dao",['$http',function($http){
 			})
 
 }
+
+	function buscarCotizacionPorCedulaAbonarPago(cedula,callback){
+		hacerPeticion('GET','/cotizaciones/abonarPago/cliente/'+cedula)
+		.then(function(res){
+				callback (null,res.data);
+			})
+			//ocurrio algun error
+			.catch(function(err){
+				callback(err,null);
+			})
+
+}
+
 	function buscarCotizacionCreditoPorCedula(cedula,callback){
 		hacerPeticion('GET','/cotizacionesCredito/cliente/'+cedula)
 		.then(function(res){
@@ -389,6 +417,17 @@ app.factory("Dao",['$http',function($http){
 
 	function getAcuerdosPago(cotizacion,callback){
 		hacerPeticion('GET','/acuerdosPago/'+cotizacion.IDCOTIZACION)
+		.then(function(res){
+				callback (null,res.data);
+			})
+			//ocurrio algun error
+			.catch(function(err){
+				callback(err,null);
+			})
+	}
+
+	function getAcuerdosPagoAbonarPago(cotizacion,callback){
+		hacerPeticion('GET','/acuerdosPagoAbonar/'+cotizacion.IDCOTIZACION)
 		.then(function(res){
 				callback (null,res.data);
 			})
@@ -420,6 +459,18 @@ app.factory("Dao",['$http',function($http){
 				callback(err,null);
 			})	
 	}
+
+	function modificarAcuerdosPago(acuerdos,callback){
+		hacerPeticion('POST','/acuerdosPago/modificar',acuerdos)
+		.then(function(res){
+				callback (null,res.data);
+			})
+			//ocurrio algun error
+			.catch(function(err){
+				callback(err,null);
+			})	
+	}
+
 
 	function modificarEstado(idproceso,callback){
 		hacerPeticion('PUT','/estado',{idproceso:idproceso})
@@ -465,7 +516,33 @@ app.factory("Dao",['$http',function($http){
 			})	
 	}
 
+	function getPagosRestantes(cotizacion,callback){
+		hacerPeticion('POST','/pagosRestantes',cotizacion)
+		.then(function(res){
+				callback (null,res.data);
+			})
+			//ocurrio algun error
+			.catch(function(err){
+				callback(err,null);
+			})	
+	}
+
+	function getPagosRestantes(cotizacion,callback){
+		hacerPeticion('POST','/getPagosRestantes',cotizacion)
+		.then(function(res){
+				callback (null,res.data);
+			})
+			//ocurrio algun error
+			.catch(function(err){
+				//callback(err,null);
+			})	
+	}
+
 	return{
+		getPagosRestantes:getPagosRestantes,
+		modificarAcuerdosPago:modificarAcuerdosPago,
+		getAcuerdosPagoAbonarPago:getAcuerdosPagoAbonarPago,
+		buscarCotizacionPorCedulaAbonarPago:buscarCotizacionPorCedulaAbonarPago,
 		estadoSepararAuto:estadoSepararAuto,
 		getClientes:getClientes,
 		insertarCliente:insertarCliente,
@@ -711,6 +788,14 @@ app.controller('controladorVentas',['$scope','Dao',function($scope,Dao){
 		})
 	}
 
+	$scope.buscarCotizacionPorCedulaAbonarPago = function(cedula){
+		Dao.buscarCotizacionPorCedulaAbonarPago(cedula,function(err,result){
+			console.log(result);
+			$scope.cotizacionesAbonarPago = result;
+		})
+	}
+
+
 	$scope.seleccionarCotizacionSepararAuto = function(cotizacion){
 		console.log(cotizacion);
 		Dao.getAcuerdosPago(cotizacion,function(err,result){
@@ -718,6 +803,40 @@ app.controller('controladorVentas',['$scope','Dao',function($scope,Dao){
 			$scope.acuerdosPago = result;
 			$scope.cotizacionSeleccionada = cotizacion;
 		})
+	}
+
+	$scope.seleccionarCotizacionAbonarPago = function(cotizacion){
+		console.log(cotizacion);
+		Dao.getAcuerdosPagoAbonarPago(cotizacion,function(err,result){
+			console.log(result);
+			$scope.acuerdosPagoAbonar = result;
+			$scope.cotizacionSeleccionada = cotizacion;
+		})
+	}
+
+	$scope.modificarAcuerdosPago = function(){
+	var datos = {
+			acuerdos:$scope.acuerdosPagoAbonar,
+			idEmpleado:11111,
+			idCotizacion:$scope.cotizacionSeleccionada.IDCOTIZACION
+		}
+
+			Dao.modificarAcuerdosPago(datos,function(err,result){
+			console.log(result);
+			$scope.factura = result;
+			alert("pagos guardados");
+			Dao.getPagosRestantes($scope.cotizacionSeleccionada,function(err,result){
+			console.log(result);
+			if(result.autoVendido){
+				alert("Auto cancelado")
+			}
+		})
+
+		})
+
+			
+
+
 	}
 
 	$scope.modificarAcuerdos = function(){
