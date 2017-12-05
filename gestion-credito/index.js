@@ -49,16 +49,22 @@ router.get('/id/:idProceso/:idCotizacion',function(req,res){
 var shortid = require('shortid');
 
 router.post('/estado',function(req,res){
-	var idProceso = shortid.generate();		
+	var idProceso = shortid.generate();
+	var idProcesos = shortid.generate();	
 	var idEmpleado = req.body.idEmpleado;
 	var idCotizacion = req.body.idCotizacion;
 	var idTipoProceso = 4;
-
+	var idTipoProcesos = 5;
 
 
 	sql = "INSERT INTO proceso (idProceso,idempleado,idCotizacion,idTipoProceso,fecha) VALUES (:idProceso,:idEmpleado,:idCotizacion,:idTipoProceso,sysdate)";
 	//true significa autocommit
 	dao.open(sql,[idProceso,idEmpleado,idCotizacion,4],true,null);
+
+	sql = "INSERT INTO proceso (idProceso,idempleado,idCotizacion,idTipoProceso,fecha) VALUES (:idProcesos,:idEmpleado,:idCotizacion,:idTipoProcesos,sysdate)";
+	//true significa autocommit
+	dao.open(sql,[idProcesos,idEmpleado,idCotizacion,5],true,null);
+
 	res.send("Cambio Realizado");
 })
 
