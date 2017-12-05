@@ -494,7 +494,6 @@ app.factory("Dao",['$http',function($http){
 			})		
 	}
 
-
 	function getDetallesCliente(cedula,callback){
 		hacerPeticion('GET','/cliente/detalles/'+cedula,null)
 		.then(function(res){
@@ -581,7 +580,7 @@ app.factory("Dao",['$http',function($http){
 		buscarCotizacionCreditoPorCedula:buscarCotizacionCreditoPorCedula,
 		getDetalleCredito:getDetalleCredito,
 		obtenerID:obtenerID,
-		modificarEstado:modificarEstado,		
+		modificarEstado:modificarEstado,			
 		getDetallesCliente:getDetallesCliente,
 		getDetallesEmpleado:getDetallesEmpleado
 	}
@@ -1270,8 +1269,10 @@ app.controller('controladorCredito',['$scope','Dao',function($scope,Dao){
 
 	$scope.cambiarEstado = function(proc,cot,id){
 		Dao.modificarEstado(cot,id,function(err,result){
-			alert("Estado Modificado");
-		})		
+			alert("Estado Cambiado");
+		})
+
+			
 	}
 	$scope.volver3 = function(menu,porcentaje,index){
 		if(menu == 'seleccionCotizacionCredito'){

@@ -93,6 +93,12 @@ router.post('/cotizaciones',function(req,res){
 		res.send("cotizacion registrada");
 	});
 
+	//hacer commit
+			dao.getConexion()
+				.then(function(con){
+					con.commit();
+					dao.close(con);
+				})
 })
 
 

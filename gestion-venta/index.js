@@ -116,7 +116,7 @@ router.get('/cotizaciones/separarAuto/cliente/:cedula',function(req,res){
 	var idAcuerdoPago = 3;
 	var idAcuerdoPagoCredito = 5;
 	var sql = "SELECT C.idCotizacion idCotizacion,C.idEmpleado,TP.nombre estado,C.cedula cliente,C.total total FROM  cotizacion C,proceso P,tipoProceso TP, (SELECT MAX(P.fecha) fecha FROM proceso P,cotizacion C WHERE P.idCotizacion = C.idCotizacion) reciente WHERE "+
-	"P.idCotizacion = C.idCotizacion AND TP.idTipoProceso = P.idTipoProceso AND (TP.idTipoProceso = 3 OR TP.idTipoProceso = 4) AND P.fecha = reciente.fecha AND "+
+	"P.idCotizacion = C.idCotizacion AND TP.idTipoProceso = P.idTipoProceso AND (TP.idTipoProceso = 3 OR TP.idTipoProceso = 5) AND P.fecha = reciente.fecha AND "+
 	"C.cedula="+cedula;
 	dao.open(sql,[],false,res);
 })
